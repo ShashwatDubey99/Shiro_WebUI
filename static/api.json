@@ -1,0 +1,156 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": "AILTM.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Model"
+    }
+  },
+  "2": {
+    "inputs": {
+      "model_type": "SD1",
+      "steps": 10,
+      "denoise": 1
+    },
+    "class_type": "AlignYourStepsScheduler",
+    "_meta": {
+      "title": "AYS"
+    }
+  },
+  "3": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 1018994713192060,
+      "cfg": 8,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "sampler": [
+        "6",
+        0
+      ],
+      "sigmas": [
+        "2",
+        0
+      ],
+      "latent_image": [
+        "7",
+        5
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "SamplerCustom"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive"
+    }
+  },
+  "5": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negetive"
+    }
+  },
+  "6": {
+    "inputs": {
+      "eta": 1,
+      "s_noise": 1,
+      "noise_device": "gpu"
+    },
+    "class_type": "SamplerDPMPP_3M_SDE",
+    "_meta": {
+      "title": "SamplerDPMPP_3M_SDE"
+    }
+  },
+  "7": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "aspect_ratio": "custom",
+      "swap_dimensions": "Off",
+      "upscale_factor": 1,
+      "prescale_factor": 1,
+      "batch_size": 1
+    },
+    "class_type": "CR Aspect Ratio",
+    "_meta": {
+      "title": "Aspect"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "10": {
+    "inputs": {
+      "model_name": "125843.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "UpscaleM"
+    }
+  },
+  "15": {
+    "inputs": {
+      "filename_prefix": "ComfyUI"
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "16": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}
