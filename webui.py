@@ -13,6 +13,8 @@ with open ("./static/url.txt","r") as file:
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    with open ("./static/url.txt","r") as file:
+      url=file.read()
     data = request.json
     print(data)
     model = data.get('model')
@@ -48,6 +50,8 @@ def generate():
 
 @app.route('/api/get-model-options', methods=['GET'])
 def get_model_options():
+    with open ("./static/url.txt","r") as file:
+       url=file.read()
     
     response=requests.get(url+"/object_info/CheckpointLoaderSimple")
 
@@ -55,6 +59,8 @@ def get_model_options():
     return jsonify(models)
 @app.route('/api/get-aspect-options', methods=['GET'])
 def get_aspect_options():
+    with open ("./static/url.txt","r") as file:
+       url=file.read()
     
     response=requests.get(url+"/object_info/CR Aspect Ratio")
 
