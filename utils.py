@@ -3,6 +3,7 @@ import requests
 import urllib
 import time
 import random
+from PIL import Image
 def getimgname(prompt_id,url):
       URL=url
       
@@ -58,4 +59,25 @@ def main_parse(data,Model,Positive,Negetive,steps,cfg , Aspect,upscale_factor,ra
     data[find_node_id_by_title(data,"Aspect")]["inputs"]["batch_size"]=int(batch)
     return data
 
+def download_img(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open("./static/upscale/input.png", 'wb') as file:
+            file.write(response.content)
+    else:
+        print(f"Failed to download image. Status code: {response.status_code}") 
+def get_workflow_img(img_path):
+   
+    img = Image.open(img_path)
+    metadata = img.info
+    return metadata    
+def Quick2xUp():
+    with open ("./static/upscale.json","r+") as file:
+        data = file.json()
+    data[find_node_id_by_title(data,'Model')]["inputs"]["ckpt_name"]=Model
+    data[find_node_id_by_title(data,"Positive")]["inputs"]["text"]=Positive
+    data[find_node_id_by_title(data,"Negetive")]["inputs"]["text"]=Negetive
+    data[find_node_id_by_title(data,"UpModel")]["inputs"]["model_name"]=UpModel
 
+    return data
+    

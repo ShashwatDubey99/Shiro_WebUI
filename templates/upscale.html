@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+</head>
+<body>
+    <div class="navbar">
+        <a href="/">Main App</a>
+        <a href="/update">Update Url</a>
+        <a href="/Galley">Not Aca</a>
+    </div>
+<div class="container">
+    <h1>AI Image Generator</h1>
+    <div class="responsive-row">
+        <div class="form-group">
+            <label for="model">Model:</label>
+            <select id="model">
+        
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="aspect">Aspect Ratio:</label>
+            <select id="aspect">
+
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="steps">Steps:</label>
+            <input type="range" id="steps" min="1" max="100" value="50" oninput="updateStepsValue(this.value)">
+            <span id="stepsValue">50</span>
+        </div>
+        <div class="form-group">
+            <label for="cfg">CFG:</label>
+            <input type="range" id="cfg" min="1" max="30" value="15" oninput="updateCfgValue(this.value)">
+            <span id="cfgValue">15</span>
+        </div>
+    </div>
+    <div class="form-group autocomplete-container">
+        <label for="positive">Positive Prompt:</label>
+        <input type="text" id="positive" placeholder="Enter positive prompt" oninput="showSuggestions(this)" onkeydown="navigateSuggestions(event)">
+        <div id="positive-suggestions" class="autocomplete-suggestions"></div>
+    </div>
+    <div class="form-group autocomplete-container">
+        <label for="negative">Negative Prompt:</label>
+        <input type="text" id="negative" placeholder="Enter negative prompt" oninput="showSuggestions(this)" onkeydown="navigateSuggestions(event)">
+        <div id="negative-suggestions" class="autocomplete-suggestions"></div>
+    </div>
+    <div class="form-group">
+        <label for="upscale_factor">Upscale Factor:</label>
+        <input type="range" id="upscale_factor" min="0.1" step="0.1" max="4" value="1" oninput="updateUpValue(this.value)">
+        <span id="UpValue">1</span>
+    </div>
+    <div class="form-group">
+        <label for="batch"> Batch Size:</label>
+        <input type="number" value="1" id="batch" placeholder="Enter No of Image">
+    </div>
+    <div class="form-group">
+        <label for="rand">Random Factor:</label>
+        <input type="checkbox" checked id="rand" onchange="toggleSeedInput()">
+    </div>
+    <div class="form-group" id="seed-group" style="display: none;">
+        <label for="seed">Seed:</label>
+        <input type="text" id="seed" placeholder="Enter seed value">
+    </div>
+    <button onclick="generateImage()">Generate Image</button>
+    
+    <div class="output" id="output">
+        <!-- The generated images will be displayed here -->
+    </div>
+</div>
+
+<script>
+   
+</script>
+
+</body>
+</html>
