@@ -9,12 +9,12 @@ app = Flask(__name__,static_folder="static",template_folder="templates")
 def index():
     return render_template("index.html")
 with open ("./static/url.txt","r") as file:
-    url=file.read()
+    URL=file.read()
 
 @app.route('/generate', methods=['POST'])
 def generate():
     with open ("./static/url.txt","r") as file:
-      url=file.read()
+      URL=file.read()
     data = request.json
     print(data)
     model = data.get('model')
@@ -39,10 +39,10 @@ def generate():
     # Queue the prompt and get the prompt ID
  
    # Replace with your actual backend URL
-    prompt_id = utils.queue_prompt(updated_data, url)
+    prompt_id = utils.queue_prompt(updated_data, URL)
     print(prompt_id)
     # Retrieve the generated image URLs
-    image_urls = utils.getimgname(prompt_id, url)
+    image_urls = utils.getimgname(prompt_id, URL)
     
     return jsonify({'image_urls': image_urls})
 
@@ -51,18 +51,18 @@ def generate():
 @app.route('/api/get-model-options', methods=['GET'])
 def get_model_options():
     with open ("./static/url.txt","r") as file:
-       url=file.read()
+     URL=file.read()
     
-    response=requests.get(url+"/object_info/CheckpointLoaderSimple")
+    response=requests.get(URL+"/object_info/CheckpointLoaderSimple")
 
     models=response.json()["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"][0]
     return jsonify(models)
 @app.route('/api/get-aspect-options', methods=['GET'])
 def get_aspect_options():
     with open ("./static/url.txt","r") as file:
-       url=file.read()
+       URL=file.read()
     
-    response=requests.get(url+"/object_info/CR Aspect Ratio")
+    response=requests.get(URL+"/object_info/CR Aspect Ratio")
 
     aspect=response.json()["CR Aspect Ratio"]["input"]["required"]["aspect_ratio"][0]
     return jsonify(aspect)
@@ -87,13 +87,17 @@ def success():
 
 @app.route('/geturl')
 def url():
-    return jsonify(url)
+    with open ("./static/url.txt","r") as file:
+     URL=file.read()
+     return jsonify(URL)
 @app.route('/gallary')
-def index():
+def gallary():
     return render_template('gallary.html')
 @app.route('/outputs')
 def out():
-    response=requests.get(f"{url}/outputs")
+    with open ("./static/url.txt","r") as file:
+       URL=file.read()
+    response=requests.get(f"{URL}/outputs")
     return jsonify(response.json())
 @app.route('/delete_image', methods=['POST'])
 def delete_image():
