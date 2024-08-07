@@ -90,7 +90,7 @@ def url():
     return jsonify(url)
 @app.route('/gallary')
 def index():
-    return render_template('index.html')
+    return render_template('gallary.html')
 @app.route('/outputs')
 def out():
     response=requests.get(f"{url}/outputs")
