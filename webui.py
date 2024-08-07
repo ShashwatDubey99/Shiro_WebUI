@@ -85,6 +85,31 @@ def success():
     return redirect("/")
 
 
+@app.route('/geturl')
+def url():
+    return jsonify(url)
+@app.route('/gallary')
+def index():
+    return render_template('index.html')
+@app.route('/outputs')
+def out():
+    response=requests.get(f"{url}/outputs")
+    return jsonify(response.json())
+@app.route('/delete_image', methods=['POST'])
+def delete_image():
+    from flask import request
+    image_name = request.json.get('filename')
+    if not image_name:
+        return jsonify({'error': 'filename is required'}), 400
+    print(image_name)
+    delete_url = f"{url}/api/outputs/{image_name}"
+    response = requests.delete(delete_url)
+    
+    if response.status_code == 200:
+        return jsonify({'message': 'Image deleted successfully'})
+    else:
+        return jsonify({'error': 'Failed to delete image'}), response.status_code
+
  
 if __name__ == '__main__':
     app.run(host="0.0.0.0",debug=True)
