@@ -101,12 +101,14 @@ def out():
     return jsonify(response.json())
 @app.route('/delete_image', methods=['POST'])
 def delete_image():
+    with open ("/static/url.txt","r") as file:
+        URL=file.read()
     from flask import request
     image_name = request.json.get('filename')
     if not image_name:
         return jsonify({'error': 'filename is required'}), 400
     print(image_name)
-    delete_url = f"{url}/api/outputs/{image_name}"
+    delete_url = f"{URL}/api/outputs/{image_name}"
     response = requests.delete(delete_url)
     
     if response.status_code == 200:
