@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template , request ,url_for,redirect
+iifrom flask import Flask, jsonify, render_template , request ,url_for,redirect
 import requests
 import utils
 import json
@@ -101,7 +101,7 @@ def out():
     return jsonify(response.json())
 @app.route('/delete_image', methods=['POST'])
 def delete_image():
-    with open ("/static/url.txt","r") as file:
+    with open ("./static/url.txt","r") as file:
         URL=file.read()
     from flask import request
     image_name = request.json.get('filename')
