@@ -1,18 +1,24 @@
+// Toggle visibility of seed input based on the state of the random checkbox
 function toggleSeedInput() {
     const rand = document.getElementById('rand').checked;
     const seedGroup = document.getElementById('seed-group');
     seedGroup.style.display = rand ? 'none' : 'block';
 }
 
+// Update display value for steps and CFG sliders
 function updateStepsValue(value) {
     document.getElementById('stepsValue').textContent = value;
 }
+
 function updateUpValue(value) {
     document.getElementById('UpValue').textContent = value;
 }
+
 function updateCfgValue(value) {
     document.getElementById('cfgValue').textContent = value;
 }
+
+// Fetch and populate model and aspect options on DOM load
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/api/get-model-options')
         .then(response => response.json())
@@ -25,27 +31,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 modelSelect.appendChild(option);
             });
         })
-        .catch(error => {
-            console.error('Error fetching model options:', error);
-        });
-});
-document.addEventListener('DOMContentLoaded', function() {
+        .catch(error => console.error('Error fetching model options:', error));
+
     fetch('/api/get-aspect-options')
         .then(response => response.json())
         .then(data => {
-            const modelSelect = document.getElementById('aspect');
+            const aspectSelect = document.getElementById('aspect');
             data.forEach(aspect => {
                 const option = document.createElement('option');
                 option.value = aspect;
                 option.text = aspect;
-                modelSelect.appendChild(option);
+                aspectSelect.appendChild(option);
             });
         })
-        .catch(error => {
-            console.error('Error fetching model options:', error);
-        });
+        .catch(error => console.error('Error fetching aspect options:', error));
 });
 
+// Function to generate images based on input parameters
 async function generateImage() {
     const model = document.getElementById('model').value;
     const positive = document.getElementById('positive').value;
@@ -57,32 +59,26 @@ async function generateImage() {
     const batch = document.getElementById('batch').value;
     const rand = document.getElementById('rand').checked;
     const seed = rand ? "No" : document.getElementById('seed').value;
-    const test = JSON.stringify({
-        model, positive, negative, steps, cfg, aspect, upscale_factor, rand, seed,batch,
-    });
-    console.log(test);
+
+    const params = {
+        model, positive, negative, steps, cfg, aspect, upscale_factor, rand, seed, batch,
+    };
+    console.log(JSON.stringify(params));
 
     try {
         const response = await fetch('/generate', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model, positive, negative, steps, cfg, aspect, upscale_factor, rand, seed ,batch
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
         });
 
         const data = await response.json();
-        console.log(data);
-
         if (data.image_urls && data.image_urls.length > 0) {
             const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = '';
-
             data.image_urls.forEach(url => {
                 const img = document.createElement('img');
-                img.height="512";
+                img.height = "512";
                 img.src = url;
                 img.alt = 'Generated Image';
                 img.onload = () => console.log(`Loaded image: ${url}`);
@@ -96,6 +92,8 @@ async function generateImage() {
         console.error('Error generating image:', error);
     }
 }
+
+// Autocomplete suggestion logic
 const words = ["beautiful", "sunset", "landscape", "portrait", "dream", "abstract", "colorful", "blur", "noise", "artifact", "distorted", "unwanted", "dark", "low-quality"];
 let currentFocus = -1;
 
@@ -105,20 +103,19 @@ function showSuggestions(input) {
     const inputValue = input.value.toLowerCase();
     const wordsArray = inputValue.split(' ');
     const lastWord = wordsArray[wordsArray.length - 1];
-    if (!lastWord) {
-        return;
-    }
+    if (!lastWord) return;
 
-    words.forEach((word, index) => {
+    words.forEach((word) => {
         if (word.toLowerCase().includes(lastWord)) {
             const suggestionDiv = document.createElement('div');
             suggestionDiv.classList.add('autocomplete-suggestion');
             suggestionDiv.textContent = word;
             suggestionDiv.onclick = function() {
                 wordsArray[wordsArray.length - 1] = word;
-                input.value = wordsArray.join(' ');
+                input.value = wordsArray.join(' ') + ' ';
                 container.innerHTML = '';
                 currentFocus = -1;
+                setTimeout(() => input.focus(), 0); // Keep focus on input after selection
             };
             container.appendChild(suggestionDiv);
         }
@@ -140,7 +137,7 @@ function navigateSuggestions(e) {
         addActive(suggestions);
     } else if (e.key === 'Enter' || e.key === 'Tab') {
         e.preventDefault();
-        if (currentFocus > -1 && suggestions) {
+        if (currentFocus > -1 && suggestions.length > 0) {
             suggestions[currentFocus].click();
         } else if (e.key === 'Tab' && suggestions.length > 0) {
             suggestions[0].click();
@@ -162,7 +159,7 @@ function removeActive(suggestions) {
     }
 }
 
-
+// Close suggestion list when clicking outside
 document.addEventListener('click', function(event) {
     const containers = document.getElementsByClassName('autocomplete-container');
     for (let i = 0; i < containers.length; i++) {
