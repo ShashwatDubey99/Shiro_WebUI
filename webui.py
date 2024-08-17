@@ -2,6 +2,11 @@ from flask import Flask, jsonify, render_template , request ,url_for,redirect
 import requests
 import utils
 import json
+'''
+Whoever is reading this I feel sorry for you but i can't write better code 
+than this so , if you can just make a PR and I will Accept it (If it works)
+
+'''
 
 app = Flask(__name__,static_folder="static",template_folder="templates")
 
@@ -9,6 +14,7 @@ app = Flask(__name__,static_folder="static",template_folder="templates")
 def index():
     return render_template("index.html")
 with open ("./static/url.txt","r") as file:
+    #IDK What The fuck i am doing with Urls But its working (KINDA.. Yeh..kinda)
     URL=file.read()
 
 @app.route('/generate', methods=['POST'])
@@ -16,7 +22,7 @@ def generate():
     with open ("./static/url.txt","r") as file:
       URL=file.read()
     data = request.json
-    print(data)
+
     model = data.get('model')
     positive = data.get('positive')
     negative = data.get('negative')
@@ -27,21 +33,13 @@ def generate():
     rand = data.get('rand')
     seed = data.get('seed') 
     batch=data.get('batch')
-    print(batch)
-
-    # Retrieve your initial JSON template
+  
+    #Prompt Parsing and returning the urls for Images 
     with open('./static/api.json',"r+", encoding="utf-8" ) as f:
         template_data = json.load(f)
-
-    # Parse and update the JSON data
     updated_data = utils.main_parse(template_data, model, positive, negative, steps, cfg, aspect, upscale_factor, rand, seed,batch)
-    
-    # Queue the prompt and get the prompt ID
- 
-   # Replace with your actual backend URL
     prompt_id = utils.queue_prompt(updated_data, URL)
     print(prompt_id)
-    # Retrieve the generated image URLs
     image_urls = utils.getimgname(prompt_id, URL)
     
     return jsonify({'image_urls': image_urls})
@@ -57,6 +55,8 @@ def get_model_options():
 
     models=response.json()["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"][0]
     return jsonify(models)
+
+
 @app.route('/api/get-aspect-options', methods=['GET'])
 def get_aspect_options():
     with open ("./static/url.txt","r") as file:
@@ -66,6 +66,12 @@ def get_aspect_options():
 
     aspect=response.json()["CR Aspect Ratio"]["input"]["required"]["aspect_ratio"][0]
     return jsonify(aspect)
+
+@app.route('/api/get-upscale-models', methods=['GET'])
+def UpScaleModels():
+
+    return jsonify(utils.Up())
+
 @app.route('/update', methods=['GET', 'POST'])
 def update():
     if request.method == 'POST':
@@ -90,15 +96,22 @@ def url():
     with open ("./static/url.txt","r") as file:
      URL=file.read()
      return jsonify(URL)
+    
+
 @app.route('/gallary')
 def gallary():
     return render_template('gallary.html')
+
+
+
 @app.route('/outputs')
 def out():
     with open ("./static/url.txt","r") as file:
        URL=file.read()
     response=requests.get(f"{URL}/outputs")
     return jsonify(response.json())
+
+
 @app.route('/delete_image', methods=['POST'])
 def delete_image():
     with open ("./static/url.txt","r") as file:

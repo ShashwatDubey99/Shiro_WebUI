@@ -4,9 +4,15 @@ import urllib
 import time
 import random
 from PIL import Image
+'''
+Whoever is reading this I feel sorry for you but i can't write better code 
+than this so , if you can just make a PR and I will Accept it (If it works)
+
+'''
+
+
 def getimgname(prompt_id,url):
       URL=url
-      
       print(prompt_id)
       respons=requests.get(url+"/history")
       while prompt_id not in respons.json():
@@ -51,9 +57,9 @@ def main_parse(data,Model,Positive,Negetive,steps,cfg , Aspect,upscale_factor,ra
     data[find_node_id_by_title(data,"AYS")]["inputs"]["steps"]=steps
     data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["cfg"]=cfg
     if rand=="No":
-        data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=seed
-    else:
         data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=random.randrange(1,4294967296)
+    else:
+        data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=seed
     data[find_node_id_by_title(data,"Aspect")]["inputs"]["aspect_ratio"]=Aspect  
     data[find_node_id_by_title(data,"Aspect")]["inputs"]["prescale_factor"]=float(upscale_factor)
     data[find_node_id_by_title(data,"Aspect")]["inputs"]["batch_size"]=int(batch)
@@ -70,14 +76,24 @@ def get_workflow_img(img_path):
    
     img = Image.open(img_path)
     metadata = img.info
-    return metadata    
-def Quick2xUp():
+    return metadata  
+def Up():
+    with open ("./static/url.txt","r") as file:
+       URL=file.read()
+    
+       response=requests.get(URL+"/object_info/CR Aspect Ratio")
+
+       modelsUP=response.json()["UpscaleModelLoader"]["input"]["model_name"]["aspect_ratio"][0]
+       return modelsUP
+def Quick2xUp(url , Model ,Positive,Negetive):
+    download_img(url)
     with open ("./static/upscale.json","r+") as file:
         data = file.json()
     data[find_node_id_by_title(data,'Model')]["inputs"]["ckpt_name"]=Model
     data[find_node_id_by_title(data,"Positive")]["inputs"]["text"]=Positive
     data[find_node_id_by_title(data,"Negetive")]["inputs"]["text"]=Negetive
-    data[find_node_id_by_title(data,"UpModel")]["inputs"]["model_name"]=UpModel
+
+    data[find_node_id_by_title(data,"UpModel")]["inputs"]["model_name"]=Up[0]#select model which is at first index 
 
     return data
     

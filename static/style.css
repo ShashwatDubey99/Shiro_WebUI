@@ -91,6 +91,14 @@ button:hover {
    flex: 1 1 24%;
    min-width: 150px;
 }
+.QuickUp{
+   background: #2afffb;
+   color: #fff;
+   cursor: pointer;
+}
+.QuickUp:hover {
+   background: #25248f;
+}
 @media (max-width: 768px) {
    .responsive-row .form-group {
        flex: 1 1 100%;

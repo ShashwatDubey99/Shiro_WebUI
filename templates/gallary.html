@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
     <style>
-        body {
+    body {
     font-family:'Courier New', Courier, monospace;
     background-color: #121212;
     color: #ffffff;
@@ -164,7 +164,7 @@
 // Fetch the URL when the DOM content is loaded
    fetchApiUrl()
     // Get the modal
-    const modal = document.getElementById('myModal');
+        const modal = document.getElementById('myModal');
     const modalImg = document.getElementById('modal-img');
     const span = document.getElementsByClassName('close')[0];
 
@@ -186,7 +186,7 @@
             img.src = `${apiUrl}/compressed/${image}`;
             img.alt = image;
 
-            // Show original image in modal on click
+            // zrShow original image in modal on click
             img.onclick = () => {
                 modal.style.display = 'block';
                 modalImg.src = `${apiUrl}/view?filename=${image}`;

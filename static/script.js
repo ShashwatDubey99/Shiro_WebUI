@@ -1,11 +1,12 @@
-// Toggle visibility of seed input based on the state of the random checkbox
+
+//FUCK YOU JAVASCRIPT 
 function toggleSeedInput() {
     const rand = document.getElementById('rand').checked;
     const seedGroup = document.getElementById('seed-group');
     seedGroup.style.display = rand ? 'none' : 'block';
 }
 
-// Update display value for steps and CFG sliders
+
 function updateStepsValue(value) {
     document.getElementById('stepsValue').textContent = value;
 }
@@ -80,10 +81,16 @@ async function generateImage() {
                 const img = document.createElement('img');
                 img.height = "512";
                 img.src = url;
+                img.onclick = () => {
+                    modal.style.display = 'block';
+                    modalImg.src = `${apiUrl}/view?filename=${image}`;
+                };
                 img.alt = 'Generated Image';
                 img.onload = () => console.log(`Loaded image: ${url}`);
                 img.onerror = () => console.error(`Error loading image: ${url}`);
                 outputDiv.appendChild(img);
+                const up_button = document.createElement('button')
+                up_button.className= 'QuickUp'
             });
         } else {
             console.error('No images found in response.');
@@ -93,7 +100,8 @@ async function generateImage() {
     }
 }
 
-// Autocomplete suggestion logic
+// Autocomplete suggestion logic 
+
 const words = ["beautiful", "sunset", "landscape", "portrait", "dream", "abstract", "colorful", "blur", "noise", "artifact", "distorted", "unwanted", "dark", "low-quality"];
 let currentFocus = -1;
 
