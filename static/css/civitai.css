@@ -1,0 +1,64 @@
+body{
+    background: #200122;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #6f0000, #200122);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #6f0000, #200122); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+}
+h1{
+    text-align: center;
+    color: white;
+
+}
+.container{
+    max-width: 350px;
+    border-radius: 10px;
+    margin: 0 auto;
+    background: rgba(27, 7, 7, 0.482);
+    padding: 1em;
+}
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+    gap: 3em;
+    padding: 5em;
+}
+.image-card {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.image-container {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+.image-container img {
+    width: 300px; 
+    height: auto;
+    object-fit: cover;
+}
+.prompt-container {
+    padding: 15px;
+    border-left: 1px solid #ddd;
+}
+.positive-prompt {
+    grid-row: 1 / 2;
+    background: #e6f7e6;
+    color: #2c662c;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.negative-prompt {
+    grid-row: 2 / 3;
+    background: #fbeaea;
+    color: #8a2c2c;
+    padding: 10px;
+}
+.prompt-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
