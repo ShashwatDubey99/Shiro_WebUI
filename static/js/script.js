@@ -1,89 +1,111 @@
-async function fetchImages() {
-    const url = 'https://civitai.com/api/v1/images?limit=10';
-    const response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    return response.json();
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.querySelector(".container");
+    const apiUrl = "https://civitai.com/api/v1/images?nsfw=true&";
+    let nextCursor = null; // Track the next cursor for pagination
 
-async function displayImages() {
-    const data = await fetchImages();
-    const gallery = document.getElementById('gallery');
-    data.items.forEach(item => {
-        const { url, meta } = item;
+    // Function to fetch image data from the API
+    async function fetchImageData(limit = 10) {
+        const params = new URLSearchParams({ limit });
+        if (nextCursor) {
+            params.append("cursor", nextCursor);
+        }
+        const url = `${apiUrl}?${params.toString()}`;
 
-        const card = document.createElement('div');
-        card.classList.add('image-card');
+        try {
+            const response = await fetch(url, { headers: { "Content-Type": "application/json" } });
+            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+            const data = await response.json();
+            nextCursor = data.metadata?.nextCursor || null; // Update the cursor for the next fetch
+            return data.items; // Return the items array
+        } catch (error) {
+            console.error("Error fetching image data:", error);
+            return [];
+        }
+    }
 
-        card.innerHTML = `
-            <div class="image-container">
-                <img src="${url}" alt="Image">
-            </div>
-            <div class="prompt-container positive-prompt">
-                <div class="prompt-title">Positive Prompt:</div>
-                <p class="prompt-content" data-prompt="${meta.prompt || ''}">
-                    ${meta.prompt ? meta.prompt.slice(0, 100) : 'N/A'}
-                </p>
-            </div>
-            <div class="prompt-container negative-prompt">
-                <div class="prompt-title">Negative Prompt:</div>
-                <p class="prompt-content" data-prompt="${meta.negativePrompt || ''}">
-                    ${meta.negativePrompt ? meta.negativePrompt.slice(0, 100) : 'N/A'}
-                </p>
-            </div>
-        `;
+    // Function to create a single Hall of Fame entry
+    function createHallOfFameEntry(imageData) {
+        // Create main Hall of Fame div
+        const hallOfFameDiv = document.createElement("div");
+        hallOfFameDiv.className = "hall-of-fame";
 
-        card.querySelectorAll('.prompt-content').forEach(prompt => {
-            prompt.addEventListener('mouseover', showPopup);
-            prompt.addEventListener('mouseout', hidePopup);
-            prompt.addEventListener('click', copyToClipboard);
+        // Create image container
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "img-container";
+        const img = document.createElement("img");
+        img.src = imageData.url;
+        img.alt = `Image by ${imageData.username}`;
+        imgContainer.appendChild(img);
+
+        // Create text content container
+        const textContent = document.createElement("div");
+        textContent.className = "text-content";
+
+        // Positive prompt section
+        const positivePromptTitle = document.createElement("h2");
+        positivePromptTitle.textContent = "Positive Prompt:";
+        const positivePromptText = document.createElement("div");
+        positivePromptText.className = "text1";
+        const positivePrompt = imageData.meta?.prompt || "N/A";
+        positivePromptText.textContent = positivePrompt.length > 200 ? positivePrompt.slice(0, 200) + "..." : positivePrompt;
+        positivePromptText.title = positivePrompt;
+        positivePromptText.addEventListener("click", () => {
+            navigator.clipboard.writeText(positivePrompt);
+            alert("Positive prompt copied!");
         });
 
-        gallery.appendChild(card);
-    });
-}
+        // Negative prompt section
+        const negativePromptTitle = document.createElement("h2");
+        negativePromptTitle.textContent = "Negative Prompt:";
+        const negativePromptText = document.createElement("div");
+        negativePromptText.className = "text2";
+        const negativePrompt = imageData.meta?.negativePrompt || "N/A";
+        negativePromptText.textContent = negativePrompt.length > 200 ? negativePrompt.slice(0, 200) + "..." : negativePrompt;
+        negativePromptText.title = negativePrompt;
+        negativePromptText.addEventListener("click", () => {
+            navigator.clipboard.writeText(negativePrompt);
+            alert("Negative prompt copied!");
+        });
 
-function showPopup(event) {
-    const fullText = event.target.dataset.prompt;
-    if (!fullText) return;
+        // Append text content
+        textContent.appendChild(positivePromptTitle);
+        textContent.appendChild(positivePromptText);
+        textContent.appendChild(negativePromptTitle);
+        textContent.appendChild(negativePromptText);
 
-    const popup = document.createElement('div');
-    popup.className = 'popup';
-    popup.innerText = fullText;
+        // Append image and text containers to the Hall of Fame div
+        hallOfFameDiv.appendChild(imgContainer);
+        hallOfFameDiv.appendChild(textContent);
 
-    document.body.appendChild(popup);
+        return hallOfFameDiv;
+    }
 
-    const rect = popup.getBoundingClientRect();
-    popup.style.left = `calc(50% - ${rect.width / 2}px)`;
-    popup.style.top = `calc(50% - ${rect.height / 2}px)`;
+    // Function to load images
+    async function loadImages() {
+        const images = await fetchImageData(10);
 
-    event.target.dataset.popupId = popup;
-}
+        if (images.length === 0) {
+            loadMoreButton.textContent = "No More Images";
+            loadMoreButton.disabled = true;
+            return;
+        }
 
-function hidePopup(event) {
-    const popup = document.querySelector('.popup');
-    if (popup) popup.remove();
-}
+        images.forEach(imageData => {
+            const hallOfFameEntry = createHallOfFameEntry(imageData);
+            container.appendChild(hallOfFameEntry);
+        });
+    }
 
-function copyToClipboard(event) {
-    const text = event.target.dataset.prompt;
-    if (!text) return;
+    // Create "Load More" button
+    const loadMoreButton = document.createElement("button");
+    loadMoreButton.textContent = "Load More";
+    loadMoreButton.className = "load-more";
+    loadMoreButton.addEventListener("click", loadImages);
 
-    navigator.clipboard.writeText(text).then(() => {
-        const copiedPopup = document.createElement('div');
-        copiedPopup.className = 'copied-popup';
-        copiedPopup.innerText = 'Copied!';
-        document.body.appendChild(copiedPopup);
+    // Add the Load More button to the container
+    container.appendChild(loadMoreButton);
 
-        // Center the copied popup
-        const rect = copiedPopup.getBoundingClientRect();
-        copiedPopup.style.left = `calc(50% - ${rect.width / 2}px)`;
-        copiedPopup.style.top = `calc(50% - ${rect.height / 2}px)`;
+    // Initial load
+    loadImages();
+});
 
-        setTimeout(() => copiedPopup.remove(), 1500);
-    });
-}
-
-displayImages();

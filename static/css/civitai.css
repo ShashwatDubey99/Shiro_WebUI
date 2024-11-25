@@ -3,10 +3,11 @@ body {
     font-family: inherit;
     margin: 0;
     padding: 0;
-    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 9%, rgba(83, 9, 85, 1) 25%, rgba(4, 0, 11, 1) 58%, rgba(9, 9, 121, 1) 71%, rgba(79, 1, 106, 1) 100%);
-    color: white;
-}
-
+    background: #C04848;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #480048, #C04848);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #480048, #C04848); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+} 
 h1 {
     text-align: center;
     margin: 20px 0;
@@ -26,7 +27,7 @@ h1 {
     align-items: center;
     margin: 20px auto;
     padding: 40px;
-    background: rgba(236, 130, 130, 0);
+    background: rgba(26, 26, 26, 0.211);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     max-width: 800px;
@@ -75,6 +76,38 @@ h1 {
 }
 .hall-of-fame .text-content .text2:hover{
     transform: scale(1.05);
+}
+
+
+.hall-of-fame .text-content .text1:hover,
+.hall-of-fame .text-content .text2:hover {
+    transform: scale(1.05);
+    overflow: visible;
+    white-space: normal;
+}
+.load-more {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    opacity: 0.9;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    margin: 20px 0;
+    font-size: 1.2em;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.load-more:hover {
+    background-color: #0056b3;
+}
+
+.load-more:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /* Responsive Design */
