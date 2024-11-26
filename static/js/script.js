@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
-    const apiUrl = "https://civitai.com/api/v1/images?nsfw=true&";
+    const apiUrl = "https://civitai.com/api/v1/images?sort=Newest&nsfw='X'";
     let nextCursor = null; // Track the next cursor for pagination
 
     // Function to fetch image data from the API
