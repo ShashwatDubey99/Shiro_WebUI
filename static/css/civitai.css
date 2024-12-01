@@ -36,6 +36,11 @@ h1 {
 .hall-of-fame .img-container {
     flex-basis: 40%;
     text-align: center;
+    justify-content: center; /* Align the image inside the container */
+  align-items: center; /* Center it vertically */
+  width: auto; 
+  position: relative;
+  overflow: hidden;
 }
 
 .hall-of-fame .img-container img {
@@ -79,26 +84,37 @@ h1 {
 }
 
 
+
 .hall-of-fame .text-content .text1:hover,
 .hall-of-fame .text-content .text2:hover {
     transform: scale(1.05);
     overflow: visible;
     white-space: normal;
 }
+/* Container styling */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center images and the button horizontally */
+    gap: 20px; /* Space between images and the button */
+    margin: 0 auto; /* Center the container within its parent */
+    padding: 20px;
+    position: relative; /* Allow positioning inside the container */
+}
+
 .load-more {
+    display: fixed;
     position: fixed;
-    bottom: 0;
-    left: 50%;
-    opacity: 0.9;
-    transform: translate(-50%, -50%);
+    bottom: 20px;
+    right: 50%;
+    font-size: 16px;
+    cursor: pointer;
     padding: 10px 20px;
-    margin: 20px 0;
-    font-size: 1.2em;
-    color: white;
-    background-color: #007BFF;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+   
 }
 
 .load-more:hover {
@@ -108,6 +124,41 @@ h1 {
 .load-more:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+    background-color:rgba(92, 12, 173, 0.368);
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    
+    box-shadow: 10px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.api-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: rgba(85, 19, 177, 0.529);
+    color: #fff;
+    border: none;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.api-button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    margin-left: 60px; /* Leave space for the sidebar */
+    padding: 20px;
 }
 
 /* Responsive Design */
@@ -121,5 +172,35 @@ h1 {
     .hall-of-fame .img-container,
     .hall-of-fame .text-content {
         flex-basis: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        background-color:rgb(109, 23, 195);
+        padding: 10px;
+       
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .api-button {
+        width: auto; /* Adjust buttons to fit content dynamically */
+        flex: 1;
+        margin: 5px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .container {
+        margin-left: 0; /* Remove margin when sidebar is at the bottom */
+        padding-bottom: 80px; /* Leave space for the bottom sidebar */
     }
 }
