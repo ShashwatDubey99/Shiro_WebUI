@@ -6,16 +6,9 @@ body {
     background-color: #0f0f0f;
     color: #ffffff;
 }
-svg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
 
-.circles{
+/* Background circles */
+.circles {
     position: fixed;
     top: 0;
     left: 0;
@@ -25,156 +18,73 @@ svg {
     z-index: -1;
 }
 
-.circles li{
+.circles li {
     position: fixed;
     display: block;
     list-style: none;
-    width: 20px;
-    height: 20px;
     background: rgba(255, 255, 255, 0.2);
     animation: animate 25s linear infinite;
     bottom: -150px;
-
+    border-radius: 50%;
 }
 
-.circles li:nth-child(1){
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-}
-
-
-.circles li:nth-child(2){
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
-}
-
-.circles li:nth-child(3){
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
-}
-
-.circles li:nth-child(4){
-    left: 40%;
-    width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
-}
-
-.circles li:nth-child(5){
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
-}
-
-.circles li:nth-child(6){
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
-}
-
-.circles li:nth-child(7){
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
-}
-
-.circles li:nth-child(8){
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 45s;
-}
-
-.circles li:nth-child(9){
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
-}
-
-.circles li:nth-child(10){
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
-}
-
-
+/* Size variations for the animated circles */
+.circles li:nth-child(1) { left: 25%; width: 80px; height: 80px; }
+.circles li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-duration: 12s; }
+.circles li:nth-child(3) { left: 70%; width: 20px; height: 20px; }
+.circles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-duration: 18s; }
+.circles li:nth-child(5) { left: 65%; width: 20px; height: 20px; }
+.circles li:nth-child(6) { left: 75%; width: 110px; height: 110px; }
+.circles li:nth-child(7) { left: 35%; width: 150px; height: 150px; }
+.circles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-duration: 45s; }
+.circles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-duration: 35s; }
+.circles li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-duration: 11s; }
 
 @keyframes animate {
-
-    0%{
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-        border-radius: 0;
-    }
-
-    100%{
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-        border-radius: 50%;
-    }
-
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
 }
-h1{
+
+/* Headings */
+h1 {
     text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1em;
 }
 
+/* Container */
 .container {
-    max-width: 350px;
+    max-width: 90%;
     border-radius: 10px;
     margin: 0 auto;
     background: rgba(102, 10, 10, 0.178);
     padding: 1em;
-    transition: 0.1s ease-in-out;
-   
+    transition: transform 0.1s ease-in-out;
 }
-.container:hover{
+
+.container:hover {
     transform: scale(1.05);
 }
 
+/* Workflow grid */
 .workflow-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3em;
-    padding: 5em;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust for smaller screens */
+    gap: 2em;
+    padding: 2em;
 }
 
+/* Workflow cards */
 .workflow-card {
-    background: rgba(17, 17, 17, 0.204); /* Semi-transparent background */
+    background: rgba(17, 17, 17, 0.204);
     border: 1px solid rgba(253, 252, 252, 0.2);
-    border-radius: 0px;
-    box-shadow: 0 2px 2px rgba(240, 236, 236, 0.3), 0 0 20px rgba(252, 252, 252, 0.3);
-    padding: 1.5em;
-    border:rgb(51, 255, 0);
     border-radius: 10px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    
+    box-shadow: 0 2px 2px rgba(240, 236, 236, 0.3), 0 0 20px rgba(252, 252, 252, 0.3);
+    padding: 1em;
     text-align: center;
     transition: transform 0.1s, box-shadow 0.2s;
-}
-
-/* Ensure text and elements inside card are fully opaque */
-.workflow-card h2, 
-.workflow-card p {
-    opacity: 1;
-    color: #ffffff; /* Ensure text is clearly visible */
+    color: #ffffff;
+    overflow: hidden;
 }
 
 .workflow-card:hover {
@@ -182,8 +92,9 @@ h1{
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 0, 183, 0.495);
 }
 
+/* Card text */
 .workflow-card h2 {
-    font-size: 1.5em;
+    font-size: 1.25rem;
     margin-bottom: 0.5em;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
@@ -191,8 +102,10 @@ h1{
 .workflow-card p {
     margin-bottom: 1em;
     color: #bbbbbb;
+    font-size: 1rem;
 }
 
+/* Button */
 .btn {
     display: inline-block;
     padding: 0.5em 1em;
@@ -209,11 +122,38 @@ h1{
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 255, 255, 0.8);
 }
 
+/* Images in cards */
 .workflow-card img {
     width: 100%;
-    height: 150px;
+    height: auto;
+    max-height: 200px;
     object-fit: cover;
-    border-radius: 0px 0px 0 0;
+    border-radius: 10px 10px 0 0;
     margin-bottom: 1em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .workflow-grid {
+        padding: 1em;
+        gap: 1.5em;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .workflow-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .workflow-card p {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.4em 0.8em;
+    }
 }

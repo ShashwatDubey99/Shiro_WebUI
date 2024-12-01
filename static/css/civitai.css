@@ -3,13 +3,11 @@ body {
     font-family: inherit;
     margin: 0;
     padding: 0;
- 
-} 
-body {
     background-color: #6d6d6d;
     color: #ffffff;
-    
 }
+
+/* SVG Background */
 svg {
     position: fixed;
     top: 0;
@@ -19,6 +17,7 @@ svg {
     z-index: -1;
 }
 
+/* Headings */
 h1 {
     text-align: center;
     margin: 20px 0;
@@ -26,8 +25,15 @@ h1 {
     color: #ffffff;
 }
 
+/* Container */
 .container {
-    padding: 10px;
+    margin-left: 60px; /* Space for sidebar on desktop */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
 }
 
 /* Hall of Fame Section */
@@ -47,11 +53,10 @@ h1 {
 .hall-of-fame .img-container {
     flex-basis: 40%;
     text-align: center;
-    justify-content: center; /* Align the image inside the container */
-  align-items: center; /* Center it vertically */
-  width: auto; 
-  position: relative;
-  overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .hall-of-fame .img-container img {
@@ -63,38 +68,19 @@ h1 {
 .hall-of-fame .text-content {
     flex-basis: 55%;
     padding: 10px;
-  
 }
 
-.hall-of-fame .text-content .text1 {
+.hall-of-fame .text-content .text1,
+.hall-of-fame .text-content .text2 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: #ffffff;
-    font-weight: bold;
     padding: 15px;
+    color: #ffffff;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: 0.1s ease-in-out;
+    transition: transform 0.1s ease-in-out;
 }
-.hall-of-fame .text-content .text1:hover{
-    transform: scale(1.05);
-}
-
-.hall-of-fame .text-content .text2 {
-    font-size: 1rem;
-    color: #ffffff;
-    padding: 15px;
-    background-color: rgba(137, 137, 137, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: 0.1s ease-in-out;
-}
-.hall-of-fame .text-content .text2:hover{
-    transform: scale(1.05);
-}
-
-
 
 .hall-of-fame .text-content .text1:hover,
 .hall-of-fame .text-content .text2:hover {
@@ -102,19 +88,40 @@ h1 {
     overflow: visible;
     white-space: normal;
 }
-/* Container styling */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center images and the button horizontally */
-    gap: 20px; /* Space between images and the button */
-    margin: 0 auto; /* Center the container within its parent */
-    padding: 20px;
-    position: relative; /* Allow positioning inside the container */
+
+/* Sidebar (Desktop) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+    background-color: rgba(92, 12, 173, 0.368);
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 10px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
 }
 
+/* API Button */
+.api-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: rgba(85, 19, 177, 0.529);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.api-button:hover {
+    background-color: #0056b3;
+}
+
+/* Load More Button */
 .load-more {
-    display: fixed;
     position: fixed;
     bottom: 20px;
     right: 50%;
@@ -125,7 +132,6 @@ h1 {
     border-radius: 5px;
     background-color: #007bff;
     color: #fff;
-   
 }
 
 .load-more:hover {
@@ -136,43 +142,8 @@ h1 {
     background-color: #ccc;
     cursor: not-allowed;
 }
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 100%;
-    background-color:rgba(92, 12, 173, 0.368);
-    border-right: 1px solid #ddd;
-    padding: 10px;
-    
-    box-shadow: 10px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-}
 
-.api-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: rgba(85, 19, 177, 0.529);
-    color: #fff;
-    border: none;
-
-    cursor: pointer;
-    text-align: left;
-}
-
-.api-button:hover {
-    background-color: #0056b3;
-}
-
-.container {
-    margin-left: 60px; /* Leave space for the sidebar */
-    padding: 20px;
-}
-
-/* Responsive Design */
+/* Responsive Design (Mobile View) */
 @media (max-width: 768px) {
     .hall-of-fame {
         flex-direction: column;
@@ -182,36 +153,34 @@ h1 {
 
     .hall-of-fame .img-container,
     .hall-of-fame .text-content {
-        flex-basis: 80%;
+        flex-basis: 100%;
+        max-width: 100%;
     }
-}
-@media (max-width: 768px) {
+
     .sidebar {
-        position: fixed;
-        top: auto;
+        position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
         height: auto;
+        background-color: rgb(109, 23, 195);
         border-right: none;
-        background-color:rgb(109, 23, 195);
         padding: 10px;
-       
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
 
     .api-button {
-        width: auto; /* Adjust buttons to fit content dynamically */
         flex: 1;
+        width: auto;
         margin: 5px;
         padding: 10px;
         text-align: center;
     }
 
     .container {
-        margin-left: 0; /* Remove margin when sidebar is at the bottom */
-        padding-bottom: 80px; /* Leave space for the bottom sidebar */
+        margin-left: 0;
+        padding-bottom: 80px;
     }
 }
