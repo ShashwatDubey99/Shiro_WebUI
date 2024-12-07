@@ -1,5 +1,5 @@
 body {
-    font-family: inherit;
+    font-family: Hack Nerd Font, monospace;
     display: grid;
     margin: 0;
     padding: 0;
@@ -70,8 +70,8 @@ h1 {
 .workflow-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust for smaller screens */
-    gap: 2em;
-    padding: 2em;
+    gap: 6em;
+    padding: 6em;
 }
 
 /* Workflow cards */
@@ -80,7 +80,7 @@ h1 {
     border: 1px solid rgba(253, 252, 252, 0.2);
     border-radius: 10px;
     box-shadow: 0 2px 2px rgba(240, 236, 236, 0.3), 0 0 20px rgba(252, 252, 252, 0.3);
-    padding: 1em;
+    padding: 2em;
     text-align: center;
     transition: transform 0.1s, box-shadow 0.2s;
     color: #ffffff;
@@ -136,8 +136,8 @@ h1 {
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
     .workflow-grid {
-        padding: 1em;
-        gap: 1.5em;
+        padding: 2em;
+        gap: 2em;
     }
 
     .container {

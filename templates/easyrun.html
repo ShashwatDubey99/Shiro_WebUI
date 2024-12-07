@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/easyrun.css">
+
+</head>
+<body>
+    <div class="input-container">
+        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
+        <button id="send-btn"> 🔥</button>
+    </div>
+    <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+
+        <li></li>
+</ul>
+    <script>
+        document.getElementById('send-btn').addEventListener('click', () => {
+            const promptValue = document.getElementById('prompt').value;
+            alert(`Prompt sent: ${promptValue}`);
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    font-family: inherit;
+    font-family: Hack Nerd Font, monospace;
     margin: 0;
     padding: 0;
     background-color: #6d6d6d;
@@ -57,13 +57,17 @@ h1 {
     align-items: center;
     position: relative;
     overflow: hidden;
+    max-height: 300px; /* Adjust max height to prevent overflow */
 }
 
 .hall-of-fame .img-container img {
     max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Maintain aspect ratio and fit within container */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 .hall-of-fame .text-content {
     flex-basis: 55%;
@@ -89,58 +93,67 @@ h1 {
     white-space: normal;
 }
 
-/* Sidebar (Desktop) */
+/* Sidebar Styling */
 .sidebar {
     position: fixed;
-    top: 0;
     left: 0;
-    width: 50px;
-    height: 100%;
-    background-color: rgba(92, 12, 173, 0.368);
-    border-right: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 10px 0 5px rgba(0, 0, 0, 0.1);
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    background-color: #121212;
+    padding: 20px;
     overflow-y: auto;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%); /* Hidden by default */
+ 
 }
 
-/* API Button */
-.api-button {
+/* Sidebar when visible */
+.sidebar.hidden {
+    transform: translateX(0);
+}
+
+/* Sidebar Button Styling */
+.sidebar h2 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.sidebar button.api-button {
     display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: rgba(85, 19, 177, 0.529);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-}
-
-.api-button:hover {
-    background-color: #0056b3;
-}
-
-/* Load More Button */
-.load-more {
-    position: fixed;
-    bottom: 20px;
-    right: 50%;
+    color: #e0e0e0;
     font-size: 16px;
-    cursor: pointer;
-    padding: 10px 20px;
+    background: none;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
+    text-align: left;
+    padding: 10px 0;
+    cursor: pointer;
+    width: 100%;
+    transition: color 0.2s ease;
 }
 
-.load-more:hover {
-    background-color: #0056b3;
+.sidebar button.api-button:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
-.load-more:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Toggle Button (Hamburger) Styling */
+.toggle-sidebar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-sidebar .hamburger {
+    width: 25px;
+    height: 3px;
+    background-color: #ffffff;
+    display: block;
+    margin: 5px 0;
 }
 
 /* Responsive Design (Mobile View) */
@@ -149,38 +162,29 @@ h1 {
         flex-direction: column;
         text-align: center;
         padding: 15px;
+        max-width: 100%;
     }
 
     .hall-of-fame .img-container,
     .hall-of-fame .text-content {
         flex-basis: 100%;
+        
+    }
+    .hall-of-fame .img-container img {
+        position: absolute;
         max-width: 100%;
+        max-height: 100%;
+        object-fit: cover; /* Cover the entire container without stretching */
+        width: 100%;
+        height: 100%;
+    }
+    
+
+    .container {
+        margin-left: 0; /* Remove sidebar offset for mobile */
     }
 
     .sidebar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        background-color: rgb(109, 23, 195);
-        border-right: none;
-        padding: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-
-    .api-button {
-        flex: 1;
-        width: auto;
-        margin: 5px;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .container {
-        margin-left: 0;
-        padding-bottom: 80px;
+        width: 100%; /* Full-width sidebar on mobile */
     }
 }

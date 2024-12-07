@@ -53,8 +53,8 @@ def find_node_id_by_title(data, title):
     return None
 def main_parse(data,Model,Positive,Negetive,steps,cfg , Aspect,upscale_factor,rand,seed,batch):
     data[find_node_id_by_title(data,'Model')]["inputs"]["ckpt_name"]=Model
-    data[find_node_id_by_title(data,"Positive")]["inputs"]["text"]=Positive
-    data[find_node_id_by_title(data,"Negetive")]["inputs"]["text"]=Negetive
+    data[get_pos_neg_keys(data)["positive_key"]]["inputs"]["text"]=Positive
+    data[get_pos_neg_keys(data)["negative_key"]]["inputs"]["text"]=Negetive
     data[find_node_id_by_title(data,"AYS")]["inputs"]["steps"]=steps
     data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["cfg"]=cfg
     if seed=="No":
@@ -73,10 +73,10 @@ def download_img(url):
             file.write(response.content)
     else:
         print(f"Failed to download image. Status code: {response.status_code}") 
-def get_workflow_img(img_path):
+def get_meta_img(img_path):
    
     img = Image.open(img_path)
-    metadata = img.info
+    metadata = img.info['prompt']
     return metadata  
 def Up():
     with open ("./static/url.txt","r") as file:
@@ -86,3 +86,25 @@ def Up():
 
        modelsUP=response.json()["UpscaleModelLoader"]["input"]["model_name"]["aspect_ratio"][0]
        return modelsUP
+    
+#takes dict
+def get_pos_neg_keys(img_metadata):
+    positive_key=None
+    negative_key=None
+    for key, value in img_metadata.items():
+        if "inputs" in value:
+            inputs = value["inputs"]
+            if "positive" in inputs:
+                positive_key = inputs["positive"][0]
+            if "negative" in inputs:
+                negative_key = inputs["negative"][0]
+    return {"positive_key": positive_key, "negative_key": negative_key}
+
+
+def get_prompt(data, positive_key, negative_key):
+    positive=data[positive_key]["inputs"]["text"]
+    negative=data[negative_key]["inputs"]["text"]
+    return {"positive": positive, "negative": negative}
+
+    
+   

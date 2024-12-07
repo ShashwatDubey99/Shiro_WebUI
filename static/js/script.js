@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
-    const sidebar = document.createElement("div");
-    sidebar.className = "sidebar";
-
-    // Default API URL
     let currentApiUrl = "https://civitai.com/api/v1/images?sort=Newest";
     let nextCursor = null;
     let isLoading = false;
@@ -11,9 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch image data from the API
     async function fetchImageData(limit = 10) {
         const params = new URLSearchParams({ limit });
-        if (nextCursor) {
-            params.append("cursor", nextCursor);
-        }
+        if (nextCursor) params.append("cursor", nextCursor);
         const url = `${currentApiUrl}&${params.toString()}`;
 
         try {
@@ -28,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to create a single Hall of Fame entry
+    // Function to create a Hall of Fame entry
     function createHallOfFameEntry(imageData) {
         const hallOfFameDiv = document.createElement("div");
         hallOfFameDiv.className = "hall-of-fame";
@@ -84,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
         isLoading = true;
 
         const images = await fetchImageData(10);
-
         if (images.length === 0) {
             window.removeEventListener("scroll", handleScroll); // Stop loading when no more images
             return;
@@ -98,17 +91,53 @@ document.addEventListener("DOMContentLoaded", () => {
         isLoading = false;
     }
 
-    // Handle scroll event to trigger loading
+    // Handle scroll event for infinite loading
     function handleScroll() {
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
             loadImages();
         }
     }
 
-    // Create a sidebar with API options
+    // Function to show a "Text Copied" message
+    function showCopiedMessage() {
+        const message = document.createElement("div");
+        message.className = "copied-message";
+        message.textContent = "Text Copied!";
+        document.body.appendChild(message);
+
+        Object.assign(message.style, {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#333",
+            color: "#fff",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            fontSize: "16px",
+            zIndex: "1000",
+            opacity: "0",
+            transition: "opacity 0.3s",
+        });
+
+        requestAnimationFrame(() => {
+            message.style.opacity = "1";
+        });
+
+        setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+        }, 1000);
+    }
+
+    // Create a sidebar
+    const sidebar = document.createElement("div");
+    sidebar.className = "sidebar hidden";
+
+    // Add API buttons to the sidebar
     const apis = [
         { name: "Safe", url: "https://civitai.com/api/v1/images?sort=Newest" },
-        { name: "X)", url: "https://civitai.com/api/v1/images?sort=Newest&nsfw=true" },
+        { name: "NSFW", url: "https://civitai.com/api/v1/images?sort=Newest&nsfw=true" },
     ];
 
     apis.forEach(api => {
@@ -126,15 +155,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.body.appendChild(sidebar);
 
+    // Create a toggle button for the sidebar
+    const toggleButton = document.createElement("button");
+    toggleButton.className = "toggle-sidebar";
+    toggleButton.innerHTML = '<span class="hamburger"></span>';
+    toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("hidden");
+    });
+
+    document.body.appendChild(toggleButton);
+
     // Initial load
     loadImages();
     window.addEventListener("scroll", handleScroll);
 });
+
 
 // Function to show a temporary "Text Copied" message
 function showCopiedMessage() {
     const message = document.createElement("div");
     message.className = "copied-message";
     message.textContent = "Text Copied!";
-    // Styles and animation logic (same as before)
+
+    Object.assign(message.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "#333",
+        color: "#fff",
+        padding: "10px 20px",
+        borderRadius: "5px",
+        fontSize: "16px",
+        zIndex: "1000",
+        opacity: "0",
+        transition: "opacity 0.3s",
+    });
+
+    document.body.appendChild(message);
+
+    requestAnimationFrame(() => {
+        message.style.opacity = "1";
+    });
+
+    setTimeout(() => {
+        message.style.opacity = "0";
+        setTimeout(() => message.remove(), 300);
+    }, 1000);
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleButton = document.querySelector(".toggle-sidebar");
+    const sidebar = document.querySelector(".sidebar");
+    const container = document.querySelector(".container");
+
+    toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("hidden");
+        container.classList.toggle("shifted");
+    });
+});
+
