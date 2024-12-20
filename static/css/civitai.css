@@ -35,6 +35,11 @@ h1 {
     gap: 20px;
     position: relative;
 }
+.api-container{
+    background-color: rgba(34, 31, 31, 0.561);
+    gap: 20px;
+    padding: 20px;
+}
 
 /* Hall of Fame Section */
 .hall-of-fame {
@@ -94,22 +99,24 @@ h1 {
 }
 
 /* Sidebar Styling */
-.sidebar {
+.sidebar.hidden {
     position: fixed;
     left: 0;
-    top: 0;
+    top: 40px;
     height: 100vh;
     width: 200px;
+    
     background-color: #121212;
     padding: 20px;
     overflow-y: auto;
     transition: transform 0.3s ease;
     transform: translateX(-100%); /* Hidden by default */
+    
  
 }
 
 /* Sidebar when visible */
-.sidebar.hidden {
+.sidebar.visible {
     transform: translateX(0);
 }
 
@@ -122,12 +129,13 @@ h1 {
 
 .sidebar button.api-button {
     display: block;
+
     color: #e0e0e0;
     font-size: 16px;
     background: none;
     border: none;
     text-align: left;
-    padding: 10px 0;
+    padding: 10px;
     cursor: pointer;
     width: 100%;
     transition: color 0.2s ease;
@@ -141,7 +149,7 @@ h1 {
 /* Toggle Button (Hamburger) Styling */
 .toggle-sidebar {
     position: fixed;
-    top: 20px;
+    top: 10px;
     left: 20px;
     background: none;
     border: none;
@@ -184,7 +192,7 @@ h1 {
         margin-left: 0; /* Remove sidebar offset for mobile */
     }
 
-    .sidebar {
-        width: 100%; /* Full-width sidebar on mobile */
+    .sidebar.visible {
+        width:100%; /* Full-width sidebar on mobile */
     }
 }

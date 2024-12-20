@@ -141,6 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     apis.forEach(api => {
+        const apiCont=document.createElement("div")
+        apiCont.className="api-container"
         const button = document.createElement("button");
         button.textContent = api.name;
         button.className = "api-button";
@@ -150,7 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = "";
             loadImages();
         });
-        sidebar.appendChild(button);
+        
+        apiCont.appendChild(button);
+        sidebar.appendChild(apiCont)
     });
 
     document.body.appendChild(sidebar);
@@ -160,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleButton.className = "toggle-sidebar";
     toggleButton.innerHTML = '<span class="hamburger"></span>';
     toggleButton.addEventListener("click", () => {
-        sidebar.classList.toggle("hidden");
+        sidebar.classList.toggle("visible");
     });
 
     document.body.appendChild(toggleButton);

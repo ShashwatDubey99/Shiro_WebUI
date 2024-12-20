@@ -19,14 +19,14 @@ def getimgname(prompt_id,url):
           respons=requests.get(url+"/history")
           time.sleep(1)
       print(respons.json())
-      f=(respons.json()[prompt_id]["outputs"]["16"]["images"])
+      f=(respons.json()[prompt_id]["outputs"]["9"]["images"])
       a=[]
       for i in f:
           filename = i["filename"]
           subfolder = i["subfolder"]
           folder_type = i["type"]
-          z=(URL+"/"+"view?"+get_image(filename, subfolder, folder_type))
-          a.append(URL+"/"+"view?"+get_image(filename, subfolder, folder_type))
+          z=(URL+"view?"+get_image(filename, subfolder, folder_type))
+          a.append(URL+"view?"+get_image(filename, subfolder, folder_type))
       print( a)    
       return a    
 
@@ -61,8 +61,6 @@ def main_parse(data,Model,Positive,Negetive,steps,cfg , Aspect,upscale_factor,ra
         data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=random.randrange(1,4294967296)
     else:
         data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=seed
-    data[find_node_id_by_title(data,"Aspect")]["inputs"]["aspect_ratio"]=Aspect  
-    data[find_node_id_by_title(data,"Aspect")]["inputs"]["prescale_factor"]=float(upscale_factor)
     data[find_node_id_by_title(data,"Aspect")]["inputs"]["batch_size"]=int(batch)
     return data
 
@@ -99,6 +97,7 @@ def get_pos_neg_keys(img_metadata):
             if "negative" in inputs:
                 negative_key = inputs["negative"][0]
     return {"positive_key": positive_key, "negative_key": negative_key}
+
 
 
 def get_prompt(data, positive_key, negative_key):
