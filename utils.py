@@ -51,39 +51,19 @@ def find_node_id_by_title(data, title):
         if value.get('_meta', {}).get('title') == title:
             return key
     return None
-def main_parse(data,Model,Positive,Negetive,steps,cfg , Aspect,upscale_factor,rand,seed,batch):
-    data[find_node_id_by_title(data,'Model')]["inputs"]["ckpt_name"]=Model
-    data[get_pos_neg_keys(data)["positive_key"]]["inputs"]["text"]=Positive
-    data[get_pos_neg_keys(data)["negative_key"]]["inputs"]["text"]=Negetive
-    data[find_node_id_by_title(data,"AYS")]["inputs"]["steps"]=steps
-    data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["cfg"]=cfg
-    if seed=="No":
-        data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=random.randrange(1,4294967296)
-    else:
-        data[find_node_id_by_title(data,"SamplerCustom")]["inputs"]["noise_seed"]=seed
-    data[find_node_id_by_title(data,"Aspect")]["inputs"]["batch_size"]=int(batch)
+def main_parse(data,prompt):
+    data[find_node_id_by_title(data,'KSampler')]["inputs"]["seed"] = random.randrange(1,4294967296)
+    data[get_pos_neg_keys(data)["positive_key"]]["inputs"]["text"]=replace_trigger_words(prompt)
+    data[get_pos_neg_keys(data)["negative_key"]]["inputs"]["text"]="low quality"
     return data
 
-def download_img(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open("./static/upscale/input.png", 'wb') as file:
-            file.write(response.content)
-    else:
-        print(f"Failed to download image. Status code: {response.status_code}") 
+ 
 def get_meta_img(img_path):
    
     img = Image.open(img_path)
     metadata = img.info['prompt']
     return metadata  
-def Up():
-    with open ("./static/url.txt","r") as file:
-       URL=file.read()
-    
-       response=requests.get(URL+"/object_info/CR Aspect Ratio")
 
-       modelsUP=response.json()["UpscaleModelLoader"]["input"]["model_name"]["aspect_ratio"][0]
-       return modelsUP
     
 #takes dict
 def get_pos_neg_keys(img_metadata):
@@ -105,5 +85,15 @@ def get_prompt(data, positive_key, negative_key):
     negative=data[negative_key]["inputs"]["text"]
     return {"positive": positive, "negative": negative}
 
+
+
+def replace_trigger_words(text):
+    # Load the JSON file containing the trigger words and their replacements
+    with open("template.json", 'r') as file:
+        replacements = json.load(file)
     
-   
+    # Iterate over the replacement dictionary and replace trigger words in the text
+    for trigger_word, replacement in replacements.items():
+        text = text.replace(trigger_word, replacement)
+    
+    return text   

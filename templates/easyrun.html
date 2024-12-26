@@ -3,28 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Text-to-Image Generator</title>
     <link rel="stylesheet" href="/static/css/easyrun.css">
+    <style>
+        /* Fullscreen image styling */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
 
+        .fullscreen img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="input-container">
-        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
-        <button id="send-btn"> 🔥</button>
-    </div>
     <ul class="circles">
         <li></li>
         <li></li>
         <li></li>
         <li></li>
-
         <li></li>
-</ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+    <div class="input-container">
+        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
+        <button id="send-btn">🔥</button>
+    </div>
+
+    <div id="gallery" style="padding: 20px; text-align: center;"></div>
+
     <script>
         document.getElementById('send-btn').addEventListener('click', () => {
             const promptValue = document.getElementById('prompt').value;
-            alert(`Prompt sent: ${promptValue}`);
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = ''; // Clear previous results
+    
+            // Create a loading spinner
+            const loading = document.createElement('div');
+            loading.textContent = 'Generating...';
+            loading.style.color = '#ffffff';
+            gallery.appendChild(loading);
+    
+            fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ positive_prompt: promptValue })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    gallery.innerHTML = ''; // Clear loading message
+                    if (data.status === 'success') {
+                        data.images.forEach(imageUrl => {
+                            const img = document.createElement('img');
+                            img.src = imageUrl;
+                            img.alt = "Generated image";
+                            img.style.margin = "10px";
+                            img.style.borderRadius = "8px";
+                            img.style.width = "200px";
+                            img.style.height = "auto";
+                            img.style.transition = "all 0.3s ease"; // Smooth transition
+    
+                            // Add click event to toggle fullscreen
+                            img.addEventListener('click', () => {
+                                if (img.classList.contains('fullscreen')) {
+                                    img.classList.remove('fullscreen');
+                                    img.style.position = '';
+                                    img.style.transform = '';
+                                    img.style.width = '200px';
+                                    img.style.height = 'auto';
+                                    img.style.zIndex = '';
+                                } else {
+                                    img.classList.add('fullscreen');
+                                    img.style.position = 'fixed';
+                                    img.style.top = '50%';
+                                    img.style.left = '50%';
+                                    img.style.transform = 'translate(-50%, -50%)';
+                                    img.style.width = '90%';
+                                    img.style.height = 'auto';
+                                    img.style.zIndex = '9999';
+                                }
+                            });
+    
+                            gallery.appendChild(img);
+                        });
+                    } else {
+                        const errorMsg = document.createElement('div');
+                        errorMsg.textContent = `Error: ${data.message}`;
+                        errorMsg.style.color = 'red';
+                        gallery.appendChild(errorMsg);
+                    }
+                })
+                .catch(err => {
+                    gallery.innerHTML = ''; // Clear loading message
+                    const errorMsg = document.createElement('div');
+                    errorMsg.textContent = `Error: ${err.message}`;
+                    errorMsg.style.color = 'red';
+                    gallery.appendChild(errorMsg);
+                });
         });
     </script>
+    
 </body>
 </html>

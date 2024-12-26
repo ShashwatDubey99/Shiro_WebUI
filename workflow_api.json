@@ -3,9 +3,9 @@
     "inputs": {
       "seed": 156680208700286,
       "steps": 20,
-      "cfg": 8,
+      "cfg": 5,
       "sampler_name": "euler",
-      "scheduler": "normal",
+      "scheduler": "karras",
       "denoise": 1,
       "model": [
         "4",
@@ -42,7 +42,7 @@
     "inputs": {
       "width": 512,
       "height": 512,
-      "batch_size": 5
+      "batch_size":1
     },
     "class_type": "EmptyLatentImage",
     "_meta": {
