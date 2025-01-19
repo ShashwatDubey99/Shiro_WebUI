@@ -55,6 +55,11 @@ def main_parse(data,prompt):
     data[find_node_id_by_title(data,'KSampler')]["inputs"]["seed"] = random.randrange(1,4294967296)
     data[get_pos_neg_keys(data)["positive_key"]]["inputs"]["text"]=replace_trigger_words(prompt)
     data[get_pos_neg_keys(data)["negative_key"]]["inputs"]["text"]="low quality"
+    truge=extract_numbers_with_context(prompt)
+    data[get_pos_neg_keys(data ,'KSampler')]["inputs"]["cfg"] = truge['cfg']
+    data[get_pos_neg_keys(data ,'KSampler')]["inputs"]["steps"] = int(truge['steps'])
+    data[get_pos_neg_keys(data ,'Empty')]["inputs"]["batch_size"] = int(truge['n'])
+    
     return data
 
  
@@ -97,3 +102,35 @@ def replace_trigger_words(text):
         text = text.replace(trigger_word, replacement)
     
     return text   
+
+
+def extract_numbers_with_context(input_str):
+        
+    import re
+    # Define patterns for numbers and the keywords
+    number_pattern = r'\b(-?\d*\.\d+|-?\d+)\b'
+    keyword_pattern = r'\b(cfg|steps|no|num|n)\b'
+
+    # Find all matches of numbers with their positions
+    matches = [(match.group(), match.start(), match.end()) for match in re.finditer(number_pattern, input_str)]
+
+    # Initialize result with default numeric values
+    result = {
+        'cfg': 5,
+        'steps': 20,
+        'n': 1
+    }
+
+    for number, start, end in matches:
+        # Check for keywords near the number (before or after)
+        pre_context = input_str[max(0, start - 10):start].lower()
+        post_context = input_str[end:end + 10].lower()
+
+        if re.search(r'\bcfg\b', pre_context) or re.search(r'\bcfg\b', post_context):
+            result['cfg'] += float(number) if '.' in number else int(number)
+        elif re.search(r'\bsteps\b', pre_context) or re.search(r'\bsteps\b', post_context):
+            result['steps'] += float(number) if '.' in number else int(number)
+        elif re.search(keyword_pattern, pre_context) or re.search(keyword_pattern, post_context):
+            result['n'] += float(number) if '.' in number else int(number)
+
+    return result
