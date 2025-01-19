@@ -17,7 +17,7 @@ def getimgname(prompt_id,url):
       respons=requests.get(url+"/history")
       while prompt_id not in respons.json():
           respons=requests.get(url+"/history")
-          time.sleep(1)
+          time.sleep(6)
       print(respons.json())
       f=(respons.json()[prompt_id]["outputs"]["9"]["images"])
       a=[]

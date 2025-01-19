@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify 
 import utils
 import random
 import os
 import ssl 
 import json
-app = Flask(__name__, static_folder="static", template_folder="templates")
+from flask_cors import CORS
 
+
+app = Flask(__name__, static_folder="static", template_folder="templates")
+CORS(app)
+url = "https://8ee5681a8fe2f12990f945e474d1a4e9.loophole.site/"
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -13,6 +17,10 @@ def index():
 @app.route("/easyrun")
 def easyrun():  
     return render_template("easyrun.html")
+    
+@app.route("/gallery")
+def galler():  
+    return render_template("gallery.html")    
 @app.route("/generate", methods=["POST"])
 def generate_image():
     try:
@@ -27,7 +35,7 @@ def generate_image():
         updated_data = utils.main_parse(prompt_data, positive_prompt)
 
         # Queue the prompt and get the prompt ID
-        url = "https://2f7752bd42e07dedf8c2b52ac07c60e6.loophole.site/"
+        
         prompt_id = utils.queue_prompt(updated_data, url)
 
         # Get generated image URLs
@@ -38,7 +46,9 @@ def generate_image():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-
+@app.route("/url", methods=["GET"])
+def get_url():
+    return jsonify({"url": url})
 
 if __name__ == "__main__":
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)

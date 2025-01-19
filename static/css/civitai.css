@@ -3,7 +3,7 @@ body {
     font-family: Hack Nerd Font, monospace;
     margin: 0;
     padding: 0;
-    background-color: #6d6d6d;
+    background-color:#e33509;
     color: #ffffff;
 }
 
@@ -35,7 +35,8 @@ h1 {
     gap: 20px;
     position: relative;
 }
-.api-container{
+
+.api-container {
     background-color: rgba(34, 31, 31, 0.561);
     gap: 20px;
     padding: 20px;
@@ -60,20 +61,22 @@ h1 {
     text-align: center;
     justify-content: center;
     align-items: center;
-    position: relative;
-    overflow: hidden;
-    max-height: 300px; /* Adjust max height to prevent overflow */
+    position:center;
+    overflow: visible; /* Prevent any cropping */
+    max-height: 300px;
 }
 
 .hall-of-fame .img-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Maintain aspect ratio and fit within container */
+    display: block;
+    max-width: 100%; /* Fit the image horizontally */
+    max-height: 100%; /* Fit the image vertically */
+    width: auto; /* Maintain original aspect ratio */
+    height: auto; /* Maintain original aspect ratio */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
+/* Text Content */
 .hall-of-fame .text-content {
     flex-basis: 55%;
     padding: 10px;
@@ -105,14 +108,11 @@ h1 {
     top: 40px;
     height: 100vh;
     width: 200px;
-    
     background-color: #121212;
     padding: 20px;
     overflow-y: auto;
     transition: transform 0.3s ease;
     transform: translateX(-100%); /* Hidden by default */
-    
- 
 }
 
 /* Sidebar when visible */
@@ -129,7 +129,6 @@ h1 {
 
 .sidebar button.api-button {
     display: block;
-
     color: #e0e0e0;
     font-size: 16px;
     background: none;
@@ -149,18 +148,22 @@ h1 {
 /* Toggle Button (Hamburger) Styling */
 .toggle-sidebar {
     position: fixed;
-    top: 10px;
-    left: 20px;
-    background: none;
+    top: 30px;
+    left: 30px;
+    background: rgba(99,26,11,0.3);
     border: none;
     cursor: pointer;
+    width:20px;
+    height:20px;
+    border-radius:25px;
+    scale :4 
 }
 
 .toggle-sidebar .hamburger {
-    width: 25px;
+    width: 0px;
     height: 3px;
     background-color: #ffffff;
-    display: block;
+    display:none;
     margin: 5px 0;
 }
 
@@ -173,26 +176,20 @@ h1 {
         max-width: 100%;
     }
 
-    .hall-of-fame .img-container,
-    .hall-of-fame .text-content {
-        flex-basis: 100%;
-        
-    }
-    .hall-of-fame .img-container img {
-        position: absolute;
+    .hall-of-fame .img-container {
         max-width: 100%;
-        max-height: 100%;
-        object-fit: cover; /* Cover the entire container without stretching */
-        width: 100%;
-        height: 100%;
     }
-    
+
+    .hall-of-fame .img-container img {
+        max-width: 100%; /* Fit within the container width */
+        height: auto; /* Maintain original aspect ratio */
+    }
 
     .container {
         margin-left: 0; /* Remove sidebar offset for mobile */
     }
 
     .sidebar.visible {
-        width:100%; /* Full-width sidebar on mobile */
+        width: 100%; /* Full-width sidebar on mobile */
     }
 }
