@@ -38,7 +38,6 @@ def get_image(filename, subfolder, folder_type):
 #api json as prompt
 def queue_prompt(prompt, url):
     p = {"prompt": prompt}
-    
     data = json.dumps(p).encode('utf-8')
     req = requests.post(f"{url}/prompt", data=data)
     global prompt_id
@@ -56,15 +55,14 @@ def main_parse(data,prompt):
     data[get_pos_neg_keys(data)["positive_key"]]["inputs"]["text"]=replace_trigger_words(prompt)
     data[get_pos_neg_keys(data)["negative_key"]]["inputs"]["text"]="low quality"
     truge=extract_numbers_with_context(prompt)
-    data[get_pos_neg_keys(data ,'KSampler')]["inputs"]["cfg"] = truge['cfg']
-    data[get_pos_neg_keys(data ,'KSampler')]["inputs"]["steps"] = int(truge['steps'])
-    data[get_pos_neg_keys(data ,'Empty')]["inputs"]["batch_size"] = int(truge['n'])
+    data[find_node_id_by_title(data ,'KSampler')]["inputs"]["cfg"] = truge['cfg']
+    data[find_node_id_by_title(data ,'KSampler')]["inputs"]["steps"] = int(truge['steps'])
+    data[find_node_id_by_title(data ,'Empty')]["inputs"]["batch_size"] = int(truge['n'])-1 or 1
     
     return data
 
  
 def get_meta_img(img_path):
-   
     img = Image.open(img_path)
     metadata = img.info['prompt']
     return metadata  

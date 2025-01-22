@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
-url = "https://8ee5681a8fe2f12990f945e474d1a4e9.loophole.site/"
+url = "http://127.0.0.1:9191/"
 @app.route("/")
 def index():
     return render_template("index.html")

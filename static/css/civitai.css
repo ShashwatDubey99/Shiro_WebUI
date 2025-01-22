@@ -1,195 +1,236 @@
-/* General Styles */
-body {
-    font-family: Hack Nerd Font, monospace;
-    margin: 0;
-    padding: 0;
-    background-color:#e33509;
-    color: #ffffff;
+/* ========== Base Styles ========== */
+:root {
+  --dark-bg: #0a0a0a;
+  --surface: rgba(40, 40, 40, 0.95);
+  --primary: #33ffad;
+  --accent: #6c00ff;
+  --text: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
 }
-
-/* SVG Background */
 svg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.3;
+}
+body {
+  font-family: 'Hack Nerd Font', monospace;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  background: var(--dark-bg);
+  line-height: 1.6;
 }
 
-/* Headings */
-h1 {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 2rem;
-    color: #ffffff;
+/* ========== Top Filter Bar ========== */
+.filter-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(30, 30, 30, 0.95);
+  padding: 0.5rem 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid var(--border);
 }
 
-/* Container */
+.filter-group-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-group-top label {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.filter-group-top select,
+.filter-group-top input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  min-width: 120px;
+}
+
+/* ========== Main Content ========== */
 .container {
-    margin-left: 60px; /* Space for sidebar on desktop */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    position: relative;
+  margin: 80px 20px 20px; /* Account for filter bar */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
 }
 
-.api-container {
-    background-color: rgba(34, 31, 31, 0.561);
-    gap: 20px;
-    padding: 20px;
-}
-
-/* Hall of Fame Section */
+/* ========== Gallery Items ========== */
 .hall-of-fame {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px auto;
-    padding: 40px;
-    background: rgba(26, 26, 26, 0.211);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    max-width: 800px;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  display: flex;
+  gap: 2rem;
+  border: 1px solid var(--border);
 }
 
-.hall-of-fame .img-container {
-    flex-basis: 40%;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    position:center;
-    overflow: visible; /* Prevent any cropping */
-    max-height: 300px;
+.img-container {
+  flex: 0 1 50%;
+  min-width: 300px;
+  position: relative;
 }
 
-.hall-of-fame .img-container img {
-    display: block;
-    max-width: 100%; /* Fit the image horizontally */
-    max-height: 100%; /* Fit the image vertically */
-    width: auto; /* Maintain original aspect ratio */
-    height: auto; /* Maintain original aspect ratio */
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.img-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Text Content */
-.hall-of-fame .text-content {
-    flex-basis: 55%;
-    padding: 10px;
+.text-content {
+  flex: 1 1 50%;
+  padding: 1rem;
 }
 
-.hall-of-fame .text-content .text1,
-.hall-of-fame .text-content .text2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    padding: 15px;
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.1s ease-in-out;
+/* ========== Prompts & Metadata ========== */
+.prompt-group {
+  margin: 1.5rem 0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 8px;
 }
 
-.hall-of-fame .text-content .text1:hover,
-.hall-of-fame .text-content .text2:hover {
-    transform: scale(1.05);
-    overflow: visible;
-    white-space: normal;
+.prompt-content {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Sidebar Styling */
-.sidebar.hidden {
-    position: fixed;
-    left: 0;
-    top: 40px;
-    height: 100vh;
-    width: 200px;
-    background-color: #121212;
-    padding: 20px;
-    overflow-y: auto;
-    transition: transform 0.3s ease;
-    transform: translateX(-100%); /* Hidden by default */
+.prompt-content:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Sidebar when visible */
+.meta-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+/* ========== Sidebar ========== */
+/* ========== Sidebar ========== */
+.sidebar {
+  position: fixed;
+  left: -300px;
+  top: 0;
+  height: 100vh;
+  width: 280px;
+  background: var(--surface);
+  transition: left 0.3s ease;
+  z-index: 9999; /* Increased z-index */
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+}
+
 .sidebar.visible {
-    transform: translateX(0);
+  left: 0;
 }
 
-/* Sidebar Button Styling */
-.sidebar h2 {
-    color: #fff;
-    font-size: 18px;
-    margin-bottom: 10px;
-}
 
-.sidebar button.api-button {
-    display: block;
-    color: #e0e0e0;
-    font-size: 16px;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    transition: color 0.2s ease;
-}
-
-.sidebar button.api-button:hover {
-    color: #ffffff;
-    text-decoration: underline;
-}
-
-/* Toggle Button (Hamburger) Styling */
+/* ========== Buttons & Interactions ========== */
 .toggle-sidebar {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    background: rgba(99,26,11,0.3);
-    border: none;
-    cursor: pointer;
-    width:20px;
-    height:20px;
-    border-radius:25px;
-    scale :4 
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: var(--primary);
+  color: var(--dark-bg);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10000; 
 }
 
-.toggle-sidebar .hamburger {
-    width: 0px;
-    height: 3px;
-    background-color: #ffffff;
-    display:none;
-    margin: 5px 0;
+.apply-filters {
+  background: var(--accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-/* Responsive Design (Mobile View) */
+button:hover {
+  opacity: 0.9;
+}
+
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
-    .hall-of-fame {
-        flex-direction: column;
-        text-align: center;
-        padding: 15px;
-        max-width: 100%;
-    }
+  .filter-bar {
+      flex-wrap: wrap;
+      padding: 0.5rem;
+  }
+  
+  .filter-group-top {
+      flex: 1 1 100%;
+      justify-content: space-between;
+  }
+  
+  .hall-of-fame {
+      flex-direction: column;
+      padding: 1rem;
+      margin: 1rem 0;
+  }
+  
+  .img-container {
+      min-width: unset;
+  }
+  
+  .sidebar {
+      width: 100%;
+      left: -100%;
+  }
+}
 
-    .hall-of-fame .img-container {
-        max-width: 100%;
-    }
+/* ========== Animations ========== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .hall-of-fame .img-container img {
-        max-width: 100%; /* Fit within the container width */
-        height: auto; /* Maintain original aspect ratio */
-    }
+.hall-of-fame {
+  animation: fadeIn 0.3s ease;
+}
 
-    .container {
-        margin-left: 0; /* Remove sidebar offset for mobile */
-    }
+/* ========== Utility Classes ========== */
+.copied-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  color: var(--dark-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  animation: fadeIn 0.2s ease;
+}
 
-    .sidebar.visible {
-        width: 100%; /* Full-width sidebar on mobile */
-    }
+.error-message {
+  background: #ff4444;
+  color: white;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 4px;
 }

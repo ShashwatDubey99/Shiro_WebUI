@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "kk.safetensors"
+      "ckpt_name": "elementsExperiments_vanadium.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
