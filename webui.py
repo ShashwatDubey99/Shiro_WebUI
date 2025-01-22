@@ -1,56 +1,137 @@
-from flask import Flask, render_template, request, jsonify 
+from flask import Flask, render_template, request, jsonify
 import utils
-import random
-import os
-import ssl 
 import json
+import ssl
+import logging
 from flask_cors import CORS
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
-url = "http://127.0.0.1:9191/"
+
+# Configuration
+COMFYUI_URL = "https://15f8f3b8144b1e888ff96c57647f19b4.loophole.site/"
+url=COMFYUI_URL
+WORKFLOW_PATH = "./workflow_api.json"
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/easyrun")
-def easyrun():  
+def easyrun():
     return render_template("easyrun.html")
-    
+
 @app.route("/gallery")
-def galler():  
-    return render_template("gallery.html")    
+def gallery():
+    return render_template("gallery.html")
+
 @app.route("/generate", methods=["POST"])
 def generate_image():
     try:
-        data = request.json
-        positive_prompt = data.get("positive_prompt", "")
+        # Validate input
+        data = request.get_json()
+        if not data or "positive_prompt" not in data:
+            return jsonify({
+                "status": "error",
+                "message": "Missing required 'positive_prompt' field"
+            }), 400
 
-        # Load and update the workflow prompt data
-        with open("./workflow_api.json", "r") as file:
-            prompt_data = json.load(file)
+        raw_prompt = data["positive_prompt"].strip()
+        if not raw_prompt:
+            return jsonify({
+                "status": "error",
+                "message": "Empty prompt provided"
+            }), 400
 
-        # Use main_parse to update the prompt data
-        updated_data = utils.main_parse(prompt_data, positive_prompt)
+        # Clean prompt and extract parameters
+        clean_prompt, params = utils.clean_prompt(raw_prompt)
+        logger.info(f"Processing prompt: '{raw_prompt}' -> Cleaned: '{clean_prompt}'")
 
-        # Queue the prompt and get the prompt ID
-        
-        prompt_id = utils.queue_prompt(updated_data, url)
+        # Load workflow template
+        try:
+            with open("./workflow_api.json", "r") as f:
+                workflow = json.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load workflow template: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "message": "Server configuration error"
+            }), 500
 
-        # Get generated image URLs
-        img_list = utils.getimgname(prompt_id, url)
+        # Update workflow with cleaned prompt and parameters
+        try:
+            updated_workflow = utils.update_workflow(
+                workflow=workflow,
+                clean_prompt=clean_prompt,
+                params=params
+            )
+        except utils.ComfyUIError as e:
+            logger.error(f"Workflow update failed: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "message": "Failed to configure image generation"
+            }), 500
 
-        return jsonify({"status": "success", "images": img_list})
+        # Submit to ComfyUI
+        try:
+            prompt_id = utils.queue_prompt(updated_workflow, url)
+            logger.info(f"Started generation with ID: {prompt_id}")
+        except utils.ComfyUIError as e:
+            logger.error(f"Generation failed to start: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "message": "Failed to start image generation"
+            }), 500
+
+        # Retrieve generated images
+        try:
+            images = utils.getimgname(prompt_id, url)
+            logger.info(f"Retrieved {len(images)} images")
+        except utils.ComfyUIError as e:
+            logger.error(f"Failed to retrieve images: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "message": "Failed to retrieve generated images"
+            }), 500
+
+        return jsonify({
+            "status": "success",
+            "images": images,
+            "parameters": {
+                "clean_prompt": clean_prompt,
+                "cfg": params["cfg"],
+                "steps": params["steps"],
+                "batch_size": params["batch_size"],
+                "seed": params["seed"]
+            }
+        })
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
+        logger.error(f"Unexpected error: {str(e)}", exc_info=True)
+        return jsonify({
+            "status": "error",
+            "message": "Internal server error"
+        }), 500
 @app.route("/url", methods=["GET"])
-def get_url():
-    return jsonify({"url": url})
+def get_comfyui_url():
+    return jsonify({"url": COMFYUI_URL})
 
 if __name__ == "__main__":
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-    ssl_context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem")
-    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=ssl_context)
+    # SSL configuration
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    try:
+        ssl_context.load_cert_chain("cert.pem", "key.pem")
+    except FileNotFoundError as e:
+        logger.warning(f"SSL files not found: {str(e)} - Starting without HTTPS")
+        ssl_context = None
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        ssl_context=ssl_context,
+        debug=True
+    )

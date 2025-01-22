@@ -1,65 +1,15 @@
+/* Base Styles */
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Hack Nerd Font, monospace;
+    font-family: 'Hack Nerd Font', monospace;
     background-color: #171414;
     color: #ffffff;
-    width: 100%;
-    height: 100vh;
-}
-  /* Fullscreen image styling */
-.fullscreen {
-    display:flex;
-    width: 90vw;
-    height: 90vh;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: all 0.3s ease;
-}
-.fullscreen img {
-    max-width: 60%;
-    max-height: auto;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-#streamed-image {
-    max-width: 100%;        /* Make the image responsive to container size */
-    height: auto;           /* Maintain aspect ratio */
-    border: 2px solid #000; /* Add a solid border around the image */
-    border-radius: 8px;     /* Round corners of the image */
-    display: block;         /* Remove inline display, ensuring proper margin */
-    margin: 20px auto;      /* Center the image and add spacing around */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a floating effect */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add a smooth transition for zooming or shadow changes */
-}
-        
-#streamed-image:hover {
-    transform: scale(1.05); /* Slightly zoom the image on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow effect on hover */
-}
-        
-.input-container {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: rgba(17, 17, 17, 0.204);
-    border: 1px solid rgba(253, 252, 252, 0.2);
-  
-    border-radius: 8px;
-    padding-left: 15px;
-    padding-right: 15px;
-    width: 60%;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* Background circles */
+/* Animated Background Circles */
 .circles {
     position: fixed;
     top: 0;
@@ -71,83 +21,267 @@ body {
 }
 
 .circles li {
-    position: fixed;
+    position: absolute;
     display: block;
     list-style: none;
-    background: rgba(255, 255, 255, 0.2);
-    animation: animate 25s linear infinite;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 25s linear infinite;
     bottom: -150px;
     border-radius: 50%;
+    backdrop-filter: blur(2px);
 }
 
-/* Size variations for the animated circles */
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+}
+
 .circles li:nth-child(1) { left: 25%; width: 80px; height: 80px; }
 .circles li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-duration: 12s; }
-.circles li:nth-child(3) { left: 70%; width: 20px; height: 20px; }
+.circles li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 2s; }
 .circles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-duration: 18s; }
-.circles li:nth-child(5) { left: 65%; width: 20px; height: 20px; }
-.circles li:nth-child(6) { left: 75%; width: 110px; height: 110px; }
-.circles li:nth-child(7) { left: 35%; width: 150px; height: 150px; }
+.circles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 1s; }
+.circles li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-duration: 22s; }
+.circles li:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 3s; }
 .circles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-duration: 45s; }
 .circles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-duration: 35s; }
 .circles li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-duration: 11s; }
 
-@keyframes animate {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
-    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+/* Input Container */
+.input-container {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90%, 600px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
 }
 
+.input-container:hover {
+    transform: translateX(-50%) scale(1.02);
+}
 
 textarea {
-    flex-grow: 1;
-    height: auto;
+    width: 100%;
+    min-height: 100px;
     border: none;
-    border-radius: 8px;
-    padding: 15px;
-    background-color:rgba(255, 255, 255, 0);
+    background: transparent;
     color: #ffffff;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    padding: 0.8rem;
     resize: none;
     outline: none;
-
+    transition: all 0.3s ease;
 }
 
 textarea::placeholder {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    text-align: start;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
 }
 
-    #send-btn {
-        width: 50px;
-        height: 50px;
-        border: none;
-        border-radius: 50%;
-        background-color: #ececec;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        font-size: 24px;
-        font-weight: bold;
-    }
-
+/* Buttons */
+#send-btn {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b6b, #ff4757);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(255, 75, 87, 0.3);
+}
 
 #send-btn:hover {
-    background-color: #c5ffee;
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 16px rgba(255, 75, 87, 0.4);
 }
 
-@media screen and (max-width: 768px) {
-    .input-container {
-        width: 80%;
+#interrupt-btn {
+    position: fixed;
+    bottom: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 75, 87, 0.3);
+    z-index: 100;
+    display: none;
+}
+
+#interrupt-btn:hover {
+    background: #ff6b81;
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* Gallery Styles */
+#gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    align-items: start; /* Prevent grid stretch */
+    justify-content: center;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 400px; /* Fixed height for grid consistency */
+    object-fit: contain; /* Maintain aspect ratio */
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 12px;
+    box-sizing: border-box;
+}
+.gallery-image:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Fullscreen Mode */
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: zoom-out;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.fullscreen img {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    aspect-ratio: attr(width) / attr(height); /* Preserve original ratio */
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    animation: zoomIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Streaming Image */
+#streamed-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
+    max-height: 60vh;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    opacity: 0.9;
+    display: none;
+}
+/* Aspect Ratio Preservation */
+.aspect-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 ratio by default */
+}
+
+.aspect-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dynamic Aspect Ratios */
+[data-aspect-ratio="16:9"] .aspect-wrapper { padding-top: 56.25%; }
+[data-aspect-ratio="4:3"] .aspect-wrapper { padding-top: 75%; }
+[data-aspect-ratio="3:2"] .aspect-wrapper { padding-top: 66.66%; }
+
+/* Hover Effects */
+.gallery-image:hover {
+    transform: scale(1.03);
+    z-index: 100;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    #gallery {
+        grid-template-columns: 1fr;
+        padding: 1rem;
     }
-    .fullscreen img {
-            max-width: 90%;
-            max-height: auto;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
+
+    .gallery-image {
+     
+        height: 500px; 
+    }
+
+    .input-container {
+        width: 90%;
+        bottom: 1rem;
+    }
+
+    #send-btn {
+        width: 42px;
+        height: 42px;
+    }
+
+    #interrupt-btn {
+        bottom: 5rem;
+        padding: 0.6rem 1.5rem;
+    }
 }

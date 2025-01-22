@@ -3,34 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text-to-Image Generator</title>
+    <title>AI Image Generator</title>
     <link rel="stylesheet" href="/static/css/easyrun.css">
-  
-
 </head>
 <body>
+    <!-- Animated Background Elements -->
     <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
+        <li aria-hidden="true"></li>
     </ul>
-    <img id="streamed-image" src="" alt="Streaming Image">
-    <div class="input-container">
-        <textarea id="prompt" placeholder="Type your prompt here..."></textarea>
-        <button id="send-btn">🔥</button>
-        <button id="interrupt-btn" style="display:none;">Interrupt</button>
 
+    <!-- Real-time Generation Preview -->
+    <img id="streamed-image" 
+         src="" 
+         alt="Generation preview" 
+         class="preview-image"
+         aria-live="polite">
+
+    <!-- Main Input Interface -->
+    <div class="input-container">
+        <textarea id="prompt" 
+                  placeholder="Describe your vision..."
+                  aria-label="Image description input"
+                  rows="3"></textarea>
+        
+        <div class="action-buttons">
+            <button id="send-btn" 
+                    aria-label="Generate image">
+                🔥
+            </button>
+            <button id="interrupt-btn" 
+                    aria-label="Stop generation"
+                    class="hidden">
+                ⏹
+            </button>
+        </div>
     </div>
 
-    <div id="gallery" style="padding: 20px; text-align: center;"></div>
+    <!-- Image Gallery Grid -->
+    <div id="gallery" class="responsive-grid">
+        <!-- Dynamic content will be inserted here -->
+        <!-- Example image container structure:
+        <div class="image-container" data-aspect-ratio="1:1">
+            <img src="image.jpg" 
+                 alt="Generated image" 
+                 class="gallery-image"
+                 tabindex="0">
+        </div>
+        -->
+    </div>
+
+    <!-- Fullscreen Overlay -->
+    <div id="fullscreen-overlay" 
+         class="hidden" 
+         aria-hidden="true"
+         role="dialog">
+        <img src="" 
+             alt="Fullscreen view" 
+             class="fullscreen-image">
+    </div>
+
     <script src="/static/js/easyrun.js"></script>
-    
 </body>
 </html>
