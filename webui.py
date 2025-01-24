@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import utils
 import json
-import ssl
+
 import logging
 from flask_cors import CORS
 
@@ -121,17 +121,9 @@ def get_comfyui_url():
     return jsonify({"url": COMFYUI_URL})
 
 if __name__ == "__main__":
-    # SSL configuration
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    try:
-        ssl_context.load_cert_chain("cert.pem", "key.pem")
-    except FileNotFoundError as e:
-        logger.warning(f"SSL files not found: {str(e)} - Starting without HTTPS")
-        ssl_context = None
 
     app.run(
         host="0.0.0.0",
         port=5000,
-        ssl_context=ssl_context,
         debug=True
     )
