@@ -1,95 +1,155 @@
-document.getElementById('send-btn').addEventListener('click', () => {
-    const promptValue = document.getElementById('prompt').value;
-    const gallery = document.getElementById('gallery');
-    const imageElement = document.getElementById('streamed-image');
-    
-    // Clear previous results with fade animation
-    gallery.style.opacity = '0';
-    setTimeout(() => {
-        gallery.innerHTML = '';
-        gallery.style.opacity = '1';
-    }, 300);
+const chat = document.getElementById('chat');
+const promptInput = document.getElementById('prompt');
+const sendBtn = document.getElementById('send-btn');
+const streamContainer = document.getElementById('stream-container');
+const streamedImage = document.getElementById('streamed-image');
+const interruptBtn = document.getElementById('interrupt-btn');
+let streamInterval = null;
 
-    // Create loading spinner
-    const loading = document.createElement('div');
-    loading.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-            <div class="loading-spinner"></div>
-            <div style="color: #fff;">Generating your artwork...</div>
-        </div>
+function addMessage(text, isUser = true) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : ''}`;
+    messageDiv.innerHTML = `
+        <div class="message-text">${text}</div>
+        <div class="timestamp">${new Date().toLocaleTimeString()}</div>
     `;
-    gallery.appendChild(loading);
+    
+    // Add click handler for user messages
+    if (isUser) {
+        messageDiv.classList.add('clickable-message');
+        messageDiv.addEventListener('click', () => {
+            const promptText = messageDiv.querySelector('.message-text').textContent;
+            promptInput.value = promptText;
+            promptInput.focus();
+            // Trigger height adjustment
+            promptInput.dispatchEvent(new Event('input'));
+        });
+    }
+    
+    chat.appendChild(messageDiv);
+    chat.scrollTop = chat.scrollHeight;
+}
+async function generateImage(prompt) {
+    // Show streaming preview
+    streamContainer.style.display = 'block';
+    interruptBtn.style.display = 'block';
 
-    // Show streaming image and interrupt button
-    imageElement.style.display = 'block';
-    const interruptButton = document.getElementById('interrupt-btn');
-    interruptButton.style.display = 'inline-block';
+    // Start streaming updates
+    let comfyUrl = '';
+    try {
+        const urlResponse = await fetch('/url');
+        const urlData = await urlResponse.json();
+        comfyUrl = urlData.url.replace(/\/$/, '');
+        
+        const updatePreview = () => {
+            streamedImage.src = `${comfyUrl}/stream/image?t=${Date.now()}`;
+        };
+        streamInterval = setInterval(updatePreview, 1000);
+        updatePreview();
+    } catch (err) {
+        console.error('Failed to start streaming:', err);
+    }
 
-    // Image generation logic
-    fetch('/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ positive_prompt: promptValue })
-    })
-    .then(response => response.json())
-    .then(data => {
-        gallery.innerHTML = '';
+    try {
+        const response = await fetch('/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ positive_prompt: prompt })
+        });
+
+        const data = await response.json();
+        
         if (data.status === 'success') {
             data.images.forEach(imageUrl => {
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                img.alt = "Generated image";
-                img.className = 'gallery-image';
-                
-                // Improved zoom functionality
-                img.addEventListener('click', () => {
-                    if (!document.fullscreenElement) {
-                        const clone = img.cloneNode();
-                        clone.classList.add('fullscreen');
-                        document.body.appendChild(clone);
-                        
-                        clone.onclick = () => clone.remove();
-                    }
-                });
+const imgMessage = document.createElement('div');
+imgMessage.className = 'message image-message';
 
-                // Add fade-in animation
-                img.style.opacity = '0';
-                gallery.appendChild(img);
-                setTimeout(() => img.style.opacity = '1', 50);
-            });
-        } else {
-            const errorMsg = document.createElement('div');
-            errorMsg.textContent = `Error: ${data.message}`;
-            errorMsg.style.color = '#ff4757';
-            errorMsg.style.padding = '1rem';
-            gallery.appendChild(errorMsg);
-        }
-    })
-    .catch(err => {
-        const errorMsg = document.createElement('div');
-        errorMsg.textContent = `Connection error: ${err.message}`;
-        errorMsg.style.color = '#ff4757';
-        gallery.appendChild(errorMsg);
-    })
-    .finally(() => {
-        interruptButton.style.display = 'none';
-        imageElement.style.display = 'none';
-    });
+const img = document.createElement('img');
+img.src = imageUrl;
+img.alt = "Generated image";
 
-    // Interrupt logic
-    interruptButton.addEventListener('click', () => {
-        fetch("/url").then(response => response.json()).then(data => {
-            fetch(`${data.url}/interrupt`, { method: "POST" });
-        });
-    });
-
-    // Streaming image logic
-    fetch("/url").then(response => response.json()).then(data => {
-        const baseUrl = data.url.replace(/\/$/, "");
-        const updateStreamedImage = () => {
-            imageElement.src = `${baseUrl}/stream/image?t=${Date.now()}`;
-        };
-        setInterval(updateStreamedImage, 1000);
-        updateStreamedImage();
-    });
+// Add click handler for fullscreen
+img.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        const container = document.createElement('div');
+        container.className = 'fullscreen';
+        const clone = img.cloneNode();
+        container.appendChild(clone);
+        document.body.appendChild(container);
+        
+        container.onclick = () => container.remove();
+    }
 });
+imgMessage.appendChild(img);
+
+const timestamp = document.createElement('div');
+timestamp.className = 'timestamp';
+timestamp.textContent = new Date().toLocaleTimeString();
+
+imgMessage.appendChild(timestamp);
+chat.appendChild(imgMessage);
+});
+        } else {
+            addMessage(`Error: ${data.message}`, false);
+        }
+    } catch (error) {
+        addMessage(`Error: ${error.message}`, false);
+    } finally {
+        // Clean up streaming
+        clearInterval(streamInterval);
+        streamContainer.style.display = 'none';
+        interruptBtn.style.display = 'none';
+    }
+}
+
+// Event Listeners
+sendBtn.addEventListener('click', async () => {
+    const prompt = promptInput.value.trim();
+    if (!prompt) return;
+
+    addMessage(prompt, true);
+    promptInput.value = '';
+    await generateImage(prompt);
+});
+
+interruptBtn.addEventListener('click', async () => {
+    try {
+        const urlResponse = await fetch('/url');
+        const urlData = await urlResponse.json();
+        await fetch(`${urlData.url}/interrupt`, { method: 'POST' });
+    } catch (err) {
+        console.error('Failed to interrupt:', err);
+    }
+});
+
+// Textarea handling
+promptInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendBtn.click();
+    }
+});
+
+promptInput.addEventListener('input', () => {
+    promptInput.style.height = 'auto';
+    promptInput.style.height = `${promptInput.scrollHeight}px`;
+});
+const themeToggle = document.getElementById('theme-toggle');
+
+function setTheme(theme) {
+document.documentElement.setAttribute('data-theme', theme);
+localStorage.setItem('theme', theme);
+themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+}
+
+function toggleTheme() {
+const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
+// Initialize theme
+const savedTheme = localStorage.getItem('theme') || 
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+setTheme(savedTheme);
+
+themeToggle.addEventListener('click', toggleTheme);

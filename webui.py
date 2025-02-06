@@ -13,7 +13,7 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
 
 # Configuration
-COMFYUI_URL = "https://15f8f3b8144b1e888ff96c57647f19b4.loophole.site/"
+COMFYUI_URL = "http://127.0.0.1:9191/"
 url=COMFYUI_URL
 WORKFLOW_PATH = "./workflow_api.json"
 
@@ -48,7 +48,7 @@ def generate_image():
             }), 400
 
         # Clean prompt and extract parameters
-        clean_prompt, params = utils.clean_prompt(raw_prompt)
+        clean_prompt, params = utils.clean_prompt(raw_prompt,url)
         logger.info(f"Processing prompt: '{raw_prompt}' -> Cleaned: '{clean_prompt}'")
 
         # Load workflow template

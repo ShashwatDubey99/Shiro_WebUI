@@ -3,73 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator</title>
+    <title>AI Image Chat</title>
     <link rel="stylesheet" href="/static/css/easyrun.css">
 </head>
 <body>
-    <!-- Animated Background Elements -->
-    <ul class="circles">
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-        <li aria-hidden="true"></li>
-    </ul>
-
-    <!-- Real-time Generation Preview -->
-    <img id="streamed-image" 
-         src="" 
-         alt="Generation preview" 
-         class="preview-image"
-         aria-live="polite">
-
-    <!-- Main Input Interface -->
+    <button class="theme-toggle" id="theme-toggle">🌓</button>
+    <div class="chat-container" id="chat"></div>
     <div class="input-container">
-        <textarea id="prompt" 
-                  placeholder="Describe your vision..."
-                  aria-label="Image description input"
-                  rows="3"></textarea>
-        
-        <div class="action-buttons">
-            <button id="send-btn" 
-                    aria-label="Generate image">
-                🔥
-            </button>
-            <button id="interrupt-btn" 
-                    aria-label="Stop generation"
-                    class="hidden">
-                ⏹
-            </button>
-        </div>
+        <textarea id="prompt" placeholder="Describe your image (e.g., 'A sunset cfg:7.5 steps:25 seed:42')"></textarea>
+        <button id="send-btn">➤</button>
     </div>
-
-    <!-- Image Gallery Grid -->
-    <div id="gallery" class="responsive-grid">
-        <!-- Dynamic content will be inserted here -->
-        <!-- Example image container structure:
-        <div class="image-container" data-aspect-ratio="1:1">
-            <img src="image.jpg" 
-                 alt="Generated image" 
-                 class="gallery-image"
-                 tabindex="0">
-        </div>
-        -->
-    </div>
-
-    <!-- Fullscreen Overlay -->
-    <div id="fullscreen-overlay" 
-         class="hidden" 
-         aria-hidden="true"
-         role="dialog">
-        <img src="" 
-             alt="Fullscreen view" 
-             class="fullscreen-image">
-    </div>
+<!-- Streaming Preview Elements -->
+<div id="stream-container">
+    <img id="streamed-image" alt="Generation preview">
+</div>
+<button id="interrupt-btn">Stop Generation</button>
 
     <script src="/static/js/easyrun.js"></script>
 </body>
